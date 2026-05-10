@@ -33,7 +33,7 @@ const viewVariants: any = {
   exit: { opacity: 0, transition: { duration: 0.2 } }
 };
 
-// Kahoot specific SVGs
+// Kanhoot specific SVGs
 const Triangle = () => (
   <svg viewBox="0 0 32 32" className="w-16 h-16 md:w-24 md:h-24 fill-white drop-shadow-md">
     <path d="M16 4 L28 26 L4 26 Z" />
@@ -81,10 +81,10 @@ function PlayScreen() {
     e.preventDefault();
     if (!pin || !name) return;
 
-    let playerId = localStorage.getItem("kahoot_player_id");
+    let playerId = localStorage.getItem("kanhoot_player_id");
     if (!playerId) {
       playerId = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 15);
-      localStorage.setItem("kahoot_player_id", playerId);
+      localStorage.setItem("kanhoot_player_id", playerId);
     }
 
     const wsUrl = process.env.NEXT_PUBLIC_WS_URL || "ws://188.132.232.104:8080";
@@ -140,7 +140,7 @@ function PlayScreen() {
             className="flex-1 flex flex-col items-center justify-center p-4"
           >
             <div className="w-full max-w-sm bg-white p-6 rounded-md shadow-sm border border-gray-200 text-center">
-              <h1 className="text-4xl font-black mb-6 text-[#333333] tracking-tighter">Kahoot!</h1>
+              <h1 className="text-4xl font-black mb-6 text-[#333333] tracking-tighter">Kanhoot!</h1>
               <form onSubmit={handleJoin} className="space-y-3">
                 <input
                   type="text"

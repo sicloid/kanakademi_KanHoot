@@ -29,7 +29,7 @@ const viewVariants: any = {
   exit: { opacity: 0, transition: { duration: 0.2 } }
 };
 
-// Kahoot specific SVGs
+// Kanhoot specific SVGs
 const Triangle = ({ className = "w-8 h-8 fill-white" }) => (
   <svg viewBox="0 0 32 32" className={className}>
     <path d="M16 4 L28 26 L4 26 Z" />
@@ -61,7 +61,7 @@ export default function HostPage() {
   const [status, setStatus] = useState<Status>("lobby");
   const wsRef = useRef<WSClient | null>(null);
 
-  const [kahootLink, setKahootLink] = useState("");
+  const [kanhootLink, setKanhootLink] = useState("");
   const [importStatus, setImportStatus] = useState("");
   const [joinUrl, setJoinUrl] = useState("Yükleniyor...");
   const [qrUrl, setQrUrl] = useState("");
@@ -115,9 +115,9 @@ export default function HostPage() {
       setPlayers((prev) => prev.filter((p) => p.id !== data.id));
     });
 
-    client.on("kahoot_imported", () => {
+    client.on("kanhoot_imported", () => {
       setImportStatus("Başarıyla içe aktarıldı! Başlamaya hazır.");
-      setKahootLink("");
+      setKanhootLink("");
     });
 
     client.on("question_started", (data) => {
@@ -223,10 +223,10 @@ export default function HostPage() {
     setStatus("get_ready");
   };
 
-  const importKahoot = () => {
-    if (wsRef.current && kahootLink) {
+  const importKanhoot = () => {
+    if (wsRef.current && kanhootLink) {
       setImportStatus("İçe aktarılıyor...");
-      wsRef.current.send("import_kahoot", { url: kahootLink });
+      wsRef.current.send("import_kanhoot", { url: kanhootLink });
     }
   };
 
@@ -248,7 +248,7 @@ export default function HostPage() {
               background: "linear-gradient(135deg, #fd3e04 0%, #d23100 100%)",
             }}
           >
-            {/* Top Bar matching Kahoot */}
+            {/* Top Bar matching Kanhoot */}
             <div className="w-full bg-white/95 backdrop-blur-sm shadow-sm py-4 px-8 flex justify-between items-center z-10 rounded-b-xl mb-8">
               <div className="flex items-center gap-4">
                 <img src="https://kanakademi.com/wp-content/uploads/2024/08/cropped-kanakademi-logo.png" alt="Kan Akademi" className="h-10 object-contain mr-4" />
@@ -260,14 +260,14 @@ export default function HostPage() {
                 <div className="bg-gray-100 rounded p-2 flex items-center">
                   <input 
                     type="text" 
-                    placeholder="Kahoot linki yapıştır (Opsiyonel)" 
-                    value={kahootLink}
-                    onChange={(e) => setKahootLink(e.target.value)}
+                    placeholder="Kanhoot linki yapıştır (Opsiyonel)" 
+                    value={kanhootLink}
+                    onChange={(e) => setKanhootLink(e.target.value)}
                     className="bg-transparent border-none outline-none text-sm font-semibold w-64 text-gray-700"
                   />
                   <button 
-                    onClick={importKahoot}
-                    disabled={!kahootLink}
+                    onClick={importKanhoot}
+                    disabled={!kanhootLink}
                     className="bg-[#26890c] text-white px-3 py-1 rounded font-bold text-sm hover:bg-[#1e6b0a] disabled:opacity-50 transition-colors"
                   >
                     İçe Aktar

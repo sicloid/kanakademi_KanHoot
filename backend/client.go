@@ -108,7 +108,7 @@ func (c *Client) writePump() {
 func (c *Client) handleMessage(msg Message) {
 	if c.Role == "host" {
 		switch msg.Type {
-		case "import_kahoot":
+		case "import_kanhoot":
 			if c.Game != nil {
 				urlStr, ok := msg.Data["url"].(string)
 				if ok {
@@ -154,7 +154,7 @@ func (c *Client) handleMessage(msg Message) {
 									c.Game.mu.Lock()
 									c.Game.Questions = newQuestions
 									c.Game.mu.Unlock()
-									c.send <- []byte(`{"type":"kahoot_imported"}`)
+									c.send <- []byte(`{"type":"kanhoot_imported"}`)
 								}
 							}
 						}

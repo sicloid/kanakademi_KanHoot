@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-type KahootQuiz = {
+type KanhootQuiz = {
   id: string;
   title: string;
   questions: any[];
@@ -20,7 +20,7 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   
   const [activeTab, setActiveTab] = useState<"library" | "stats">("library");
-  const [library, setLibrary] = useState<KahootQuiz[]>([]);
+  const [library, setLibrary] = useState<KanhootQuiz[]>([]);
   const [stats, setStats] = useState<GameStat[]>([]);
   const [importUrl, setImportUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ export default function AdminPage() {
 
   const fetchLibrary = async () => {
     try {
-      const res = await fetch(`${API_URL}/api/kahoots`, {
+      const res = await fetch(`${API_URL}/api/kanhoots`, {
         headers: { "X-Admin-Key": password }
       });
       const data = await res.json();
@@ -73,9 +73,9 @@ export default function AdminPage() {
       const res = await fetch(`https://create.kahoot.it/rest/kahoots/${uuid}`);
       const data = await res.json();
 
-      const newQuiz: KahootQuiz = {
+      const newQuiz: KanhootQuiz = {
         id: uuid,
-        title: data.title || "İçe Aktarılan Kahoot",
+        title: data.title || "İçe Aktarılan Kanhoot",
         questions: data.questions.map((kq: any) => ({
           question: kq.question.replace(/<[^>]*>/g, '').trim(),
           time_limit_sec: kq.time / 1000,
@@ -84,7 +84,7 @@ export default function AdminPage() {
         }))
       };
 
-      await fetch(`${API_URL}/api/kahoots`, {
+      await fetch(`${API_URL}/api/kanhoots`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -96,13 +96,13 @@ export default function AdminPage() {
       setImportUrl("");
       fetchLibrary();
     } catch (e) {
-      alert("Hata oluştu, geçerli bir Kahoot linki girdiğinizden emin olun.");
+      alert("Hata oluştu, geçerli bir Kanhoot linki girdiğinizden emin olun.");
     } finally {
       setLoading(false);
     }
   };
 
-  const startGameFromLibrary = (quiz: KahootQuiz) => {
+  const startGameFromLibrary = (quiz: KanhootQuiz) => {
     // We navigate to the Host page and pass the quiz data or ID.
     // For MVP, we can pass it via localStorage so the host page picks it up.
     localStorage.setItem("pendingQuiz", JSON.stringify(quiz.questions));
@@ -162,7 +162,7 @@ export default function AdminPage() {
         {activeTab === "library" && (
           <div className="space-y-6">
             <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-2xl font-bold mb-4 text-gray-800">Yeni Kahoot İçe Aktar</h2>
+              <h2 className="text-2xl font-bold mb-4 text-gray-800">Yeni Kanhoot İçe Aktar</h2>
               <form onSubmit={handleImport} className="flex gap-2">
                 <input
                   type="text"
@@ -182,7 +182,7 @@ export default function AdminPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {library.length === 0 && <div className="text-gray-500 font-medium">Henüz kayıtlı kahoot yok.</div>}
+              {library.length === 0 && <div className="text-gray-500 font-medium">Henüz kayıtlı kanhoot yok.</div>}
               {library.map((q, i) => (
                 <div key={i} className="bg-white p-6 rounded-lg shadow flex flex-col justify-between">
                   <div>

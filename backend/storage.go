@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-type KahootQuiz struct {
+type KanhootQuiz struct {
 	ID        string     `json:"id"`
 	Title     string     `json:"title"`
 	Questions []Question `json:"questions"`
@@ -20,7 +20,7 @@ type GameStat struct {
 }
 
 var (
-	Library []KahootQuiz
+	Library []KanhootQuiz
 	Stats   []GameStat
 	libMu   sync.RWMutex
 	statMu  sync.RWMutex
@@ -31,7 +31,7 @@ func loadLibrary() {
 	if err == nil {
 		json.Unmarshal(b, &Library)
 	} else {
-		Library = []KahootQuiz{}
+		Library = []KanhootQuiz{}
 	}
 }
 
@@ -54,14 +54,14 @@ func saveStats() {
 	os.WriteFile("stats.json", b, 0644)
 }
 
-func AddQuizToLibrary(quiz KahootQuiz) {
+func AddQuizToLibrary(quiz KanhootQuiz) {
 	libMu.Lock()
 	defer libMu.Unlock()
 	Library = append(Library, quiz)
 	saveLibrary()
 }
 
-func GetLibrary() []KahootQuiz {
+func GetLibrary() []KanhootQuiz {
 	libMu.RLock()
 	defer libMu.RUnlock()
 	return Library

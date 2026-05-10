@@ -154,7 +154,7 @@ func main() {
 		}
 	}
 
-	http.HandleFunc("/api/kahoots", cors(func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/api/kanhoots", cors(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "OPTIONS" && r.Header.Get("X-Admin-Key") != "Kanakademi2026" {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
@@ -164,7 +164,7 @@ func main() {
 		if r.Method == "GET" {
 			json.NewEncoder(w).Encode(GetLibrary())
 		} else if r.Method == "POST" {
-			var quiz KahootQuiz
+			var quiz KanhootQuiz
 			if err := json.NewDecoder(r.Body).Decode(&quiz); err == nil {
 				AddQuizToLibrary(quiz)
 				w.WriteHeader(http.StatusOK)
