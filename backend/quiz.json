@@ -1,0 +1,26 @@
+[
+  {
+    "question": "Türkiye'nin başkenti neresidir?",
+    "options": ["İstanbul", "Ankara", "İzmir", "Bursa"],
+    "correct_index": 1,
+    "time_limit_sec": 20
+  },
+  {
+    "question": "En büyük gezegen hangisidir?",
+    "options": ["Dünya", "Mars", "Jüpiter", "Satürn"],
+    "correct_index": 2,
+    "time_limit_sec": 15
+  },
+  {
+    "question": "İstiklal Marşı'nın şairi kimdir?",
+    "options": ["Orhan Veli Kanık", "Nazım Hikmet", "Mehmet Akif Ersoy", "Cemal Süreya"],
+    "correct_index": 2,
+    "time_limit_sec": 20
+  },
+  {
+    "question": "Hangi renkler ana renklerdir?",
+    "options": ["Kırmızı, Sarı, Mavi", "Yeşil, Turuncu, Mor", "Siyah, Beyaz, Gri", "Sarı, Yeşil, Mavi"],
+    "correct_index": 0,
+    "time_limit_sec": 20
+  }
+]
