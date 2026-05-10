@@ -25,6 +25,7 @@ type Game struct {
 	CurrentQuestion  int
 	AcceptingAnswers bool
 	QuestionStartTime time.Time
+	HasAnswered      map[string]bool
 	mu               sync.RWMutex
 }
 
@@ -38,6 +39,7 @@ func NewGame(pin string, host *Client) *Game {
 		Questions:        QuizQuestions, // Defaults to the loaded quiz.json
 		CurrentQuestion:  -1,
 		AcceptingAnswers: false,
+		HasAnswered:      make(map[string]bool),
 	}
 }
 
@@ -140,6 +142,11 @@ func (g *Game) HandleAnswer(clientID string, color string) {
 		return
 	}
 
+	if g.HasAnswered[clientID] {
+		return // Ignore multiple answers from same player
+	}
+	g.HasAnswered[clientID] = true
+
 	colorIndex, ok := ColorToIndex[color]
 	if !ok {
 		return
@@ -169,6 +176,13 @@ func (g *Game) HandleAnswer(clientID string, color string) {
 			"isCorrect": isCorrect,
 		},
 	})
+
+	// Check if all active players have answered
+	allAnswered := len(g.HasAnswered) >= len(g.Players)
+	if allAnswered {
+		// Run EndQuestion asynchronously to not block HandleAnswer mutex
+		go g.EndQuestion()
+	}
 }
 
 // GetLeaderboard returns current scores sorted or as map.
@@ -201,6 +215,7 @@ func (g *Game) NextQuestion() {
 	
 	g.AcceptingAnswers = true
 	g.QuestionStartTime = time.Now()
+	g.HasAnswered = make(map[string]bool)
 	
 	q := g.Questions[g.CurrentQuestion]
 	g.mu.Unlock()
@@ -226,6 +241,10 @@ func (g *Game) NextQuestion() {
 
 func (g *Game) EndQuestion() {
 	g.mu.Lock()
+	if !g.AcceptingAnswers {
+		g.mu.Unlock()
+		return
+	}
 	g.AcceptingAnswers = false
 	qIndex := g.CurrentQuestion
 	if qIndex < 0 || qIndex >= len(g.Questions) {
@@ -276,11 +295,31 @@ func (g *Game) EndQuestion() {
 }
 
 func (g *Game) EndGame() {
+	lb := g.GetLeaderboard()
 	g.BroadcastToHost(Message{
 		Type: "game_ended",
-		Data: g.GetLeaderboard(),
+		Data: lb,
 	})
 	g.BroadcastToPlayers(Message{
 		Type: "game_ended",
 	})
+
+	// Save stats
+	if lbArray, ok := lb["leaderboard"].([]map[string]interface{}); ok {
+		var arr []interface{}
+		for _, item := range lbArray {
+			arr = append(arr, item)
+		}
+		AddGameStat(GameStat{
+			GameID:      g.Pin,
+			Date:        time.Now(),
+			Leaderboard: arr,
+		})
+	} else if lbArray, ok := lb["leaderboard"].([]interface{}); ok {
+		AddGameStat(GameStat{
+			GameID:      g.Pin,
+			Date:        time.Now(),
+			Leaderboard: lbArray,
+		})
+	}
 }

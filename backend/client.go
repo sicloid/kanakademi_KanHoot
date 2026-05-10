@@ -161,6 +161,37 @@ func (c *Client) handleMessage(msg Message) {
 					}()
 				}
 			}
+		case "set_questions":
+			if c.Game != nil {
+				questionsData, ok := msg.Data["questions"].([]interface{})
+				if ok {
+					var newQuestions []Question
+					for _, qd := range questionsData {
+						qMap, _ := qd.(map[string]interface{})
+						qStr, _ := qMap["question"].(string)
+						tl, _ := qMap["time_limit_sec"].(float64)
+						correct, _ := qMap["correct_index"].(float64)
+						var opts []string
+						optList, _ := qMap["options"].([]interface{})
+						for _, opt := range optList {
+							opts = append(opts, opt.(string))
+						}
+						
+						q := Question{
+							Question:     qStr,
+							TimeLimitSec: int(tl),
+							CorrectIndex: int(correct),
+							Options:      opts,
+						}
+						newQuestions = append(newQuestions, q)
+					}
+					if len(newQuestions) > 0 {
+						c.Game.mu.Lock()
+						c.Game.Questions = newQuestions
+						c.Game.mu.Unlock()
+					}
+				}
+			}
 		case "start_game":
 			// start_game acts like next_question for the very first question
 			if c.Game != nil {

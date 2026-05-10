@@ -22,6 +22,9 @@ type Question struct {
 var QuizQuestions []Question
 
 func init() {
+	loadLibrary()
+	loadStats()
+	
 	b, err := os.ReadFile("quiz.json")
 	if err != nil {
 		log.Println("Could not read quiz.json, using empty questions list", err)
@@ -132,8 +135,44 @@ func main() {
 		serveWsPlayer(hub, w, r)
 	})
 
+	// Setup simple CORS wrapper for API
+	cors := func(h http.HandlerFunc) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+			if r.Method == "OPTIONS" {
+				w.WriteHeader(http.StatusOK)
+				return
+			}
+			h(w, r)
+		}
+	}
+
+	http.HandleFunc("/api/kahoots", cors(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		if r.Method == "GET" {
+			json.NewEncoder(w).Encode(GetLibrary())
+		} else if r.Method == "POST" {
+			var quiz KahootQuiz
+			if err := json.NewDecoder(r.Body).Decode(&quiz); err == nil {
+				AddQuizToLibrary(quiz)
+				w.WriteHeader(http.StatusOK)
+			} else {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			}
+		}
+	}))
+
+	http.HandleFunc("/api/stats", cors(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		if r.Method == "GET" {
+			json.NewEncoder(w).Encode(GetStats())
+		}
+	}))
+
 	serverAddr := ":8080"
-	log.Printf("Starting WebSocket server on %s", serverAddr)
+	log.Printf("Starting server on %s", serverAddr)
 
 	srv := &http.Server{
 		Addr:              serverAddr,
