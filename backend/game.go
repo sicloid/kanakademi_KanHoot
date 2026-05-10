@@ -47,7 +47,9 @@ func NewGame(pin string, host *Client) *Game {
 func (g *Game) AddPlayer(client *Client, name string) {
 	g.mu.Lock()
 	g.Players[client.ID] = client
-	g.Scores[client.ID] = 0
+	if _, exists := g.Scores[client.ID]; !exists {
+		g.Scores[client.ID] = 0
+	}
 	g.Names[client.ID] = name
 	g.mu.Unlock()
 
@@ -278,20 +280,20 @@ func (g *Game) EndQuestion() {
 
 	// Inform players individually
 	g.mu.RLock()
+	playerSnapshots := make(map[string]int)
 	for id, score := range g.Scores {
-		// Just send score. Real app would remember what they answered to say "Correct" or "Wrong"
-		// Since we don't store individual answers per question to keep it simple, 
-		// we'll just send their updated score.
-		g.mu.RUnlock()
+		playerSnapshots[id] = score
+	}
+	g.mu.RUnlock()
+
+	for id, score := range playerSnapshots {
 		g.SendToPlayer(id, Message{
 			Type: "question_ended",
 			Data: map[string]interface{}{
 				"score": score,
 			},
 		})
-		g.mu.RLock()
 	}
-	g.mu.RUnlock()
 }
 
 func (g *Game) EndGame() {

@@ -83,10 +83,15 @@ func serveWsHost(hub *Hub, w http.ResponseWriter, r *http.Request) {
 func serveWsPlayer(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	pin := r.URL.Query().Get("pin")
 	name := r.URL.Query().Get("name")
+	id := r.URL.Query().Get("id")
 
 	if pin == "" || name == "" {
 		http.Error(w, "pin and name are required", http.StatusBadRequest)
 		return
+	}
+
+	if id == "" {
+		id = uuid.New().String()
 	}
 
 	game := hub.GetGame(pin)
@@ -102,7 +107,7 @@ func serveWsPlayer(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	}
 
 	client := &Client{
-		ID:   uuid.New().String(),
+		ID:   id,
 		Role: "player",
 		Conn: conn,
 		send: make(chan []byte, 256),
@@ -150,6 +155,11 @@ func main() {
 	}
 
 	http.HandleFunc("/api/kahoots", cors(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "OPTIONS" && r.Header.Get("X-Admin-Key") != "Kanakademi2026" {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
 		w.Header().Set("Content-Type", "application/json")
 		if r.Method == "GET" {
 			json.NewEncoder(w).Encode(GetLibrary())
@@ -165,6 +175,11 @@ func main() {
 	}))
 
 	http.HandleFunc("/api/stats", cors(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "OPTIONS" && r.Header.Get("X-Admin-Key") != "Kanakademi2026" {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
 		w.Header().Set("Content-Type", "application/json")
 		if r.Method == "GET" {
 			json.NewEncoder(w).Encode(GetStats())
