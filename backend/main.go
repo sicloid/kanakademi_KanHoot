@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -36,8 +37,8 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 	CheckOrigin: func(r *http.Request) bool {
 		origin := r.Header.Get("Origin")
-		// Allow local development and Vercel domains
-		if origin == "http://localhost:3000" || origin == "http://localhost:8080" {
+		// Allow local development on any port
+		if strings.HasPrefix(origin, "http://localhost:") {
 			return true
 		}
 		// Allow kanakademi-quiz and related vercel app domains
