@@ -1,0 +1,55 @@
+Retrieving project…
+Deploying bicersukru15-2550s-projects/frontend
+Uploading [--------------------] (0.0B/29.6KB)
+Uploading [==========----------] (16.0KB/29.6KB)
+Uploading [==================--] (27.1KB/29.6KB)
+Uploading [====================] (29.6KB/29.6KB)
+Inspect: https://vercel.com/bicersukru15-2550s-projects/frontend/AhzysK1CCQ9GvZNiv3yip7tYT5od [3s]
+Production: https://frontend-br9c0hodi-bicersukru15-2550s-projects.vercel.app [3s]
+https://frontend-br9c0hodi-bicersukru15-2550s-projects.vercel.appBuilding...
+Building: Running build in Washington, D.C., USA (East) – iad1
+Building: Build machine configuration: 2 cores, 8 GB
+Building: Retrieving list of deployment files...
+Building: Retrieving list of deployment files...
+Building: Downloading 27 deployment files...
+Building: Restored build cache from previous deployment (4ehQ6UiiPVoGWRP96ika8kBp67n9)
+Building: Running "vercel build"
+Building: Vercel CLI 53.3.2
+Building: Installing dependencies...
+Building: up to date in 885ms
+Building: 144 packages are looking for funding
+Building: run `npm fund` for details
+Building: Detected Next.js version: 16.2.6
+Building: Running "npm run build"
+Building: > frontend@0.1.0 build
+Building: > next build
+Building: Applying modifyConfig from Vercel
+Building: ▲ Next.js 16.2.6 (Turbopack)
+Building: Creating an optimized production build ...
+Building: ✓ Compiled successfully in 6.2s
+Building: Running TypeScript ...
+Building: Finished TypeScript in 3.7s ...
+Building: Collecting page data using 1 worker ...
+Building: Generating static pages using 1 worker (0/6) ...
+Building: Generating static pages using 1 worker (1/6)
+Building: Generating static pages using 1 worker (2/6)
+Building: Generating static pages using 1 worker (4/6)
+Building: ✓ Generating static pages using 1 worker (6/6) in 183ms
+Building: Finalizing page optimization ...
+Building: Running onBuildComplete from Vercel
+Building: Route (app)
+Building: ┌ ○ /
+Building: ├ ○ /_not-found
+Building: ├ ○ /admin
+Building: └ ○ /play
+Building: ○  (Static)  prerendered as static content
+Building: Build Completed in /vercel/output [14s]
+Building: Deploying outputs...
+[2K[1A[2K[GProduction: https://frontend-br9c0hodi-bicersukru15-2550s-projects.vercel.app [25s]
+Completing...
+Aliased: https://frontend-taupe-three-83.vercel.app [25s]
+
+Common next commands:
+- `vercel inspect frontend-br9c0hodi-bicersukru15-2550s-projects.vercel.app --logs`
+- `vercel redeploy frontend-br9c0hodi-bicersukru15-2550s-projects.vercel.app`
+> Tip: Run `npx plugins add vercel/vercel-plugin` to enhance your agent experience

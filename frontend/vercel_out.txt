@@ -1,0 +1,43 @@
+Retrieving project…
+Deploying bicersukru15-2550s-projects/frontend
+Uploading [--------------------] (0.0B/69B)
+Uploading [====================] (69.0B/69B)
+Inspect: https://vercel.com/bicersukru15-2550s-projects/frontend/Ahfv7quFSiXw2HsraWG8wA83VrRv [4s]
+Production: https://frontend-1s74bfskh-bicersukru15-2550s-projects.vercel.app [4s]
+https://frontend-1s74bfskh-bicersukru15-2550s-projects.vercel.appBuilding...
+Building...
+Building: Running build in Washington, D.C., USA (East) – iad1
+Building: Build machine configuration: 2 cores, 8 GB
+Building: Retrieving list of deployment files...
+Building: Previous build caches not available.
+Building: Downloading 23 deployment files...
+Building: Running "vercel build"
+Building: Vercel CLI 53.3.2
+Building: Installing dependencies...
+Building: added 367 packages in 11s
+Building: 144 packages are looking for funding
+Building: run `npm fund` for details
+Building: Detected Next.js version: 16.2.6
+Building: Running "npm run build"
+Building: > frontend@0.1.0 build
+Building: > next build
+Building: Applying modifyConfig from Vercel
+Building: Attention: Next.js now collects completely anonymous telemetry regarding usage.
+Building: This information is used to shape Next.js' roadmap and prioritize features.
+Building: You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+Building: https://nextjs.org/telemetry
+Building: ▲ Next.js 16.2.6 (Turbopack)
+Building: Creating an optimized production build ...
+Building: ✓ Compiled successfully in 5.7s
+Building: Running TypeScript ...
+Building: Failed to type check.
+Building: ./src/app/page.tsx:183:35
+Building: Type error: Operator '>' cannot be applied to types 'string | number' and 'number'.
+Building: 181 |   // Timer logic for Get Ready Countdown
+Building: 182 |   useEffect(() => {
+Building: > 183 |     if (status === "get_ready" && readyCountdown > 0) {
+Building: |                                   ^
+Building: 184 |       const timer = setTimeout(() => setReadyCountdown((prev) => prev - 1), 1000);
+Building: 185 |       return () => clearTimeout(timer);
+Building: 186 |     } else if (status === "get_ready" && readyCountdown === 0) {
+Error: Command "npm run build" exited with 1
