@@ -147,10 +147,7 @@ func (c *Client) handleMessage(msg Message) {
 											q.CorrectIndex = i
 										}
 									}
-									// Pad to 4 options if fewer
-									for len(q.Options) < 4 {
-										q.Options = append(q.Options, "")
-									}
+
 									newQuestions = append(newQuestions, q)
 								}
 								if len(newQuestions) > 0 {

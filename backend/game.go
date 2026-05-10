@@ -218,6 +218,9 @@ func (g *Game) NextQuestion() {
 	
 	g.BroadcastToPlayers(Message{
 		Type: "question_started",
+		Data: map[string]interface{}{
+			"optionCount": len(q.Options),
+		},
 	})
 }
 
