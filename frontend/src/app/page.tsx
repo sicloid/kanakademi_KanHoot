@@ -19,7 +19,7 @@ export default function LandingPage() {
       >
         <div className="bg-white p-4 rounded-2xl shadow-xl inline-block border-b-4 border-[#fd3e04]">
           <img 
-            src="https://kanakademi.com.tr/wp-content/uploads/2024/08/cropped-kanakademi-logo.png" 
+            src="https://kanakademi.com.tr/wp-content/uploads/2024/08/kanakademi-logo.png" 
             alt="Kan Akademi" 
             className="h-20 object-contain" 
           />
