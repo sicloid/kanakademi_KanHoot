@@ -299,11 +299,11 @@ function PlayScreen() {
                <img src="https://kanakademi.com.tr/wp-content/uploads/2024/08/kanakademi-logo.png" alt="Kan Akademi" className="h-6 object-contain" />
                <span className="font-black text-[#fd3e04]">Kanhoot!</span>
             </div>
-            <div className="flex-1 flex items-center justify-center bg-[#f2f2f2] p-4">
+            <div className="flex-1 flex items-center justify-center bg-[#0B1B3D] p-4">
               <div className="text-center">
-                <h2 className="text-4xl font-bold text-[#333] mb-8 tracking-tight">Cevap Bekleniyor...</h2>
+                <h2 className="text-4xl font-bold text-white mb-8 tracking-tight drop-shadow-md">Cevap Bekleniyor...</h2>
                 <div className="flex justify-center">
-                  <img src="https://kanakademi.com.tr/wp-content/uploads/2024/10/Adsiz-tasarim-1.gif" alt="Bekleniyor..." className="w-24 h-24 object-contain" />
+                  <img src="https://kanakademi.com.tr/wp-content/uploads/2024/10/Adsiz-tasarim-1.gif" alt="Bekleniyor..." className="w-32 h-32 object-contain" />
                 </div>
               </div>
             </div>
