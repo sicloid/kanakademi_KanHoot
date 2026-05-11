@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import KanhootBuilder from "@/components/KanhootBuilder";
-
 type KanhootQuiz = {
   id: string;
   title: string;
@@ -20,13 +18,12 @@ type GameStat = {
 export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const [activeTab, setActiveTab] = useState<"library" | "stats" | "builder">("library");
+  
+  const [activeTab, setActiveTab] = useState<"library" | "stats">("library");
   const [library, setLibrary] = useState<KanhootQuiz[]>([]);
   const [stats, setStats] = useState<GameStat[]>([]);
   const [importUrl, setImportUrl] = useState("");
   const [loading, setLoading] = useState(false);
-  const [editingQuiz, setEditingQuiz] = useState<KanhootQuiz | undefined>(undefined);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://188.132.232.104:8080";
 
@@ -89,7 +86,7 @@ export default function AdminPage() {
 
       await fetch(`${API_URL}/api/kanhoots`, {
         method: "POST",
-        headers: {
+        headers: { 
           "Content-Type": "application/json",
           "X-Admin-Key": password
         },
@@ -112,19 +109,9 @@ export default function AdminPage() {
     window.open("/", "_blank");
   };
 
-  const handleEdit = (quiz: KanhootQuiz) => {
-    setEditingQuiz(quiz);
-    setActiveTab("builder");
-  };
-
-  const openBuilderNew = () => {
-    setEditingQuiz(undefined);
-    setActiveTab("builder");
-  };
-
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ background: "linear-gradient(135deg, #0B1B3D 0%, #fd3e04 100%)" }}>
+      <div className="min-h-screen bg-gradient-to-br from-[#0B1B3D] to-[#fd3e04] flex flex-col items-center justify-center p-4">
         <div className="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm w-full">
           <h1 className="text-3xl font-black mb-6 text-[#333]">Admin Girişi</h1>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -151,41 +138,26 @@ export default function AdminPage() {
     <div className="min-h-screen bg-gray-100 p-6 font-sans">
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-black text-[#fd3e04]">Kan Akademi Admin Paneli</h1>
+          <h1 className="text-4xl font-black text-[#0B1B3D]">Kan Akademi Admin Paneli</h1>
           <button onClick={() => setIsAuthenticated(false)} className="text-gray-500 font-bold hover:text-gray-800">
             Çıkış Yap
           </button>
         </div>
 
         <div className="flex gap-4 mb-6 border-b-2 border-gray-300 pb-2">
-          <button
-            onClick={() => setActiveTab("library")}
+          <button 
+            onClick={() => setActiveTab("library")} 
             className={`text-2xl font-bold px-4 py-2 rounded ${activeTab === "library" ? 'bg-[#fd3e04] text-white' : 'text-gray-500 hover:bg-gray-200'}`}
           >
             Kütüphane
           </button>
-          <button
-            onClick={openBuilderNew}
-            className={`text-2xl font-bold px-4 py-2 rounded ${activeTab === "builder" ? 'bg-[#fd3e04] text-white' : 'text-gray-500 hover:bg-gray-200'}`}
-          >
-            + Yeni Kanhoot Oluştur
-          </button>
-          <button
-            onClick={() => setActiveTab("stats")}
+          <button 
+            onClick={() => setActiveTab("stats")} 
             className={`text-2xl font-bold px-4 py-2 rounded ${activeTab === "stats" ? 'bg-[#fd3e04] text-white' : 'text-gray-500 hover:bg-gray-200'}`}
           >
             Sonuçlar & İstatistikler
           </button>
         </div>
-
-        {activeTab === "builder" && (
-          <KanhootBuilder
-            initialData={editingQuiz}
-            adminKey={password}
-            onSave={() => { setActiveTab("library"); fetchLibrary(); }}
-            onCancel={() => setActiveTab("library")}
-          />
-        )}
 
         {activeTab === "library" && (
           <div className="space-y-6">
@@ -197,10 +169,10 @@ export default function AdminPage() {
                   placeholder="https://create.kahoot.it/share/... linkini yapıştır"
                   value={importUrl}
                   onChange={(e) => setImportUrl(e.target.value)}
-                  className="flex-1 p-3 border-2 border-gray-300 rounded focus:border-[#fd3e04] outline-none font-medium"
+                  className="flex-1 p-3 border-2 border-gray-300 rounded focus:border-[#fd3e04] outline-none font-medium text-gray-900"
                 />
-                <button
-                  type="submit"
+                <button 
+                  type="submit" 
                   disabled={loading || !importUrl}
                   className="bg-[#fd3e04] text-white font-bold px-6 rounded disabled:opacity-50"
                 >
@@ -217,20 +189,12 @@ export default function AdminPage() {
                     <h3 className="text-xl font-bold text-gray-800 mb-2">{q.title}</h3>
                     <p className="text-gray-500">{q.questions.length} Soru</p>
                   </div>
-                  <div className="mt-4 flex gap-2">
-                    <button
-                      onClick={() => startGameFromLibrary(q)}
-                      className="flex-1 bg-[#26890c] text-white font-bold py-2 rounded hover:bg-[#1f7309] transition-colors"
-                    >
-                      Oyunu Başlat
-                    </button>
-                    <button
-                      onClick={() => handleEdit(q)}
-                      className="flex-1 bg-gray-200 text-gray-700 font-bold py-2 rounded hover:bg-gray-300 transition-colors"
-                    >
-                      Düzenle
-                    </button>
-                  </div>
+                  <button 
+                    onClick={() => startGameFromLibrary(q)}
+                    className="mt-4 bg-[#26890c] text-white font-bold py-2 rounded hover:bg-[#1f7309]"
+                  >
+                    Oyunu Başlat
+                  </button>
                 </div>
               ))}
             </div>

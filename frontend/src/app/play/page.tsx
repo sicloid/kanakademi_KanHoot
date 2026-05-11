@@ -152,7 +152,7 @@ function PlayScreen() {
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
                   readOnly={!!urlPin}
-                  className={`w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-400 text-black bg-white ${urlPin ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                  className={`w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-400 text-black ${urlPin ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                 />
                 <input
                   type="text"
@@ -160,7 +160,7 @@ function PlayScreen() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   autoFocus
-                  className="w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-400 text-black bg-white"
+                  className="w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-400 text-black"
                 />
                 <motion.button
                   whileTap={{ y: 2 }}
@@ -343,23 +343,32 @@ function PlayScreen() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex flex-col items-center justify-center bg-[#0B1B3D] p-4"
+            className="flex-1 flex flex-col items-center justify-center p-4 text-center"
+            style={{
+              background: "linear-gradient(135deg, #0B1B3D 0%, #fd3e04 100%)",
+            }}
           >
-            <div className="text-center text-white w-full max-w-sm">
-              <motion.h2 
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", damping: 10 }}
-                className="text-5xl font-black mb-8 tracking-tight"
-              >
-                Oyun Bitti!
-              </motion.h2>
-              <p className="text-2xl mb-8 font-bold">Büyük ekrana bak</p>
-              <div className="bg-white text-[#0B1B3D] p-6 rounded-md shadow-lg flex justify-between items-center">
-                <p className="text-xl font-bold">Nihai Puanın</p>
-                <p className="text-4xl font-black">{score}</p>
+            <motion.h2 
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", bounce: 0.5 }}
+              className="text-4xl md:text-5xl font-black mb-8 text-white tracking-tight drop-shadow-md"
+            >
+              Oyun Bitti!
+            </motion.h2>
+            <p className="text-xl md:text-2xl mb-8 font-bold text-white/90">Büyük ekrandan podyumu izle!</p>
+            
+            <motion.div 
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white p-8 rounded-2xl shadow-2xl flex flex-col items-center justify-center min-w-[300px] border-b-8 border-gray-200"
+            >
+              <p className="text-gray-500 font-bold mb-2 uppercase tracking-widest text-sm">Nihai Puanın</p>
+              <div className="text-5xl font-black text-[#0B1B3D] bg-gray-100 py-4 px-8 rounded-lg">
+                {score}
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

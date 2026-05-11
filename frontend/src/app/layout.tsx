@@ -9,7 +9,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Kanhoot",
+  title: "Kanhoot!",
   description: "Interactive learning platform",
 };
 

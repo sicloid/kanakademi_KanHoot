@@ -23,6 +23,14 @@ const itemVariants: any = {
   },
 };
 
+const leaderboardItemVariants: any = {
+  hidden: { x: -100, opacity: 0 },
+  visible: { 
+    x: 0, opacity: 1, 
+    transition: { type: "spring", stiffness: 300, damping: 24 } 
+  },
+};
+
 const viewVariants: any = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.3 } },
@@ -102,7 +110,7 @@ export default function HostPage() {
           const questions = JSON.parse(pendingQuiz);
           client.send("set_questions", { questions });
           setImportStatus("Kütüphaneden yüklendi! Başlamaya hazır.");
-          localStorage.removeItem("pendingQuiz");
+          // localStorage.removeItem("pendingQuiz"); // Removed so that on refresh it reloads the same quiz
         } catch(e) {}
       }
     });
@@ -128,31 +136,7 @@ export default function HostPage() {
       setCurrentQ(data.current);
       setTotalQ(data.total);
       setCorrectIndex(null);
-      
-      if (data.current === 1) {
-        // Show get ready screen for 3 seconds before showing FIRST question
-        setStatus("get_ready");
-        let counter = 3;
-        setReadyCountdown(counter);
-        
-        const timer = setInterval(() => {
-          counter--;
-          setReadyCountdown(counter);
-          if (counter === 0) {
-            clearInterval(timer);
-            setStatus("question");
-            setTimeLeft(data.timeLimit);
-          }
-        }, 1000);
-      } else {
-        // For subsequent questions, start immediately with a brief 1-second transition
-        setStatus("get_ready");
-        setReadyCountdown("Hazır...");
-        setTimeout(() => {
-          setStatus("question");
-          setTimeLeft(data.timeLimit);
-        }, 1000);
-      }
+      setStatus("question");
     });
 
     client.on("question_ended", (data) => {
@@ -233,7 +217,7 @@ export default function HostPage() {
   const showLeaderboard = () => setStatus("leaderboard");
 
   return (
-    <div className="min-h-screen bg-[#f2f2f2] flex flex-col font-sans overflow-hidden">
+    <div className={`min-h-screen flex flex-col font-sans overflow-hidden ${["waiting", "get_ready", "podium"].includes(status) ? 'bg-gradient-to-br from-[#0B1B3D] to-[#1a2e5a]' : 'bg-[#f2f2f2]'}`}>
       <AnimatePresence mode="wait">
         
         {status === "lobby" && (
@@ -263,7 +247,7 @@ export default function HostPage() {
                     placeholder="Kanhoot linki yapıştır (Opsiyonel)" 
                     value={kanhootLink}
                     onChange={(e) => setKanhootLink(e.target.value)}
-                    className="bg-transparent border-none outline-none text-sm font-semibold w-64 text-gray-700"
+                    className="bg-transparent border-none outline-none text-sm font-semibold w-64 text-black placeholder-gray-500"
                   />
                   <button 
                     onClick={importKanhoot}
@@ -413,7 +397,7 @@ export default function HostPage() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex flex-col items-center justify-center bg-[#0B1B3D]"
+            className="flex-1 flex flex-col items-center justify-center"
           >
             <h2 className="text-4xl md:text-6xl font-black text-white mb-12 tracking-tight">Hazır Ol!</h2>
             <motion.div 
@@ -546,7 +530,7 @@ export default function HostPage() {
               {leaderboard.slice(0, 5).map((player, index) => (
                 <motion.div 
                   key={player.id} 
-                  variants={itemVariants}
+                  variants={leaderboardItemVariants}
                   className="bg-white p-5 rounded shadow-sm border border-gray-200 flex justify-between items-center"
                 >
                   <div className="flex items-center gap-6">
@@ -569,9 +553,9 @@ export default function HostPage() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex flex-col items-center justify-end w-full relative bg-[#0B1B3D] overflow-hidden"
+            className="flex-1 flex flex-col items-center justify-end w-full relative overflow-hidden"
           >
-            <h2 className="text-5xl md:text-7xl font-black text-white mt-12 absolute top-12 tracking-tight drop-shadow-[0_4px_4px_rgba(253,62,4,0.5)]">Podyum</h2>
+            <h2 className="text-5xl md:text-7xl font-black text-white mt-12 absolute top-12 tracking-tight drop-shadow-lg">Podyum</h2>
             
             <motion.div 
               variants={containerVariants}
