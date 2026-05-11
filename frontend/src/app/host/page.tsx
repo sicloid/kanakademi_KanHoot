@@ -235,8 +235,12 @@ export default function HostPage() {
   };
 
   const nextQuestion = () => {
-    setReadyCountdown(3);
-    setStatus("get_ready");
+    if (currentQ >= totalQ) {
+      if (wsRef.current) wsRef.current.send("next_question");
+    } else {
+      setReadyCountdown(3);
+      setStatus("get_ready");
+    }
   };
 
   const importKanhoot = () => {
