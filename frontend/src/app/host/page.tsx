@@ -244,7 +244,7 @@ export default function HostPage() {
     if (currentQ >= totalQ) {
       if (wsRef.current) wsRef.current.send("next_question");
     } else {
-      setReadyCountdown(3);
+      setReadyCountdown(2);
       setStatus("get_ready");
     }
   };
@@ -442,19 +442,30 @@ export default function HostPage() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex flex-col items-center justify-center"
+            className="flex-1 flex flex-col items-center justify-center bg-[#0B1B3D] absolute inset-0 z-50"
           >
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-12 tracking-tight">Hazır Ol!</h2>
-            <motion.div 
-              key={readyCountdown}
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 1.5, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="text-[12rem] md:text-[20rem] font-black text-white leading-none drop-shadow-lg"
-            >
-              {typeof readyCountdown === "number" && readyCountdown > 0 ? readyCountdown : "BAŞLA!"}
-            </motion.div>
+            {currentQ === 0 ? (
+              <>
+                <h2 className="text-4xl md:text-6xl font-black text-white mb-12 tracking-tight">Hazır Ol!</h2>
+                <motion.div 
+                  key={readyCountdown}
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 1.5, opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="text-[12rem] md:text-[20rem] font-black text-white leading-none drop-shadow-lg"
+                >
+                  {typeof readyCountdown === "number" && readyCountdown > 0 ? readyCountdown : "BAŞLA!"}
+                </motion.div>
+              </>
+            ) : (
+              <>
+                <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tight drop-shadow-md">Soru Geliyor...</h2>
+                <div className="flex justify-center">
+                  <img src="https://kanakademi.com.tr/wp-content/uploads/2024/10/Adsiz-tasarim-1.gif" alt="Soru Geliyor..." className="w-48 h-48 md:w-64 md:h-64 object-contain" />
+                </div>
+              </>
+            )}
           </motion.div>
         )}
 
