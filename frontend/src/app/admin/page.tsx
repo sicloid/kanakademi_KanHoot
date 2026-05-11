@@ -107,8 +107,8 @@ export default function AdminPage() {
   const startGameFromLibrary = (quiz: KanhootQuiz) => {
     // We navigate to the Host page and pass the quiz data or ID.
     // For MVP, we can pass it via localStorage so the host page picks it up.
-    localStorage.setItem("pendingQuiz", JSON.stringify(quiz.questions));
-    window.open("/", "_blank");
+    localStorage.setItem("pendingQuiz", JSON.stringify(quiz));
+    window.open("/host", "_blank");
   };
 
   if (!isAuthenticated) {
@@ -139,9 +139,12 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-gray-100 p-6 font-sans">
       <div className="max-w-5xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-4xl font-black text-[#0B1B3D]">Kan Akademi Admin Paneli</h1>
-          <button onClick={() => setIsAuthenticated(false)} className="text-gray-500 font-bold hover:text-gray-800">
+        <div className="flex items-center justify-between mb-8 bg-[#0B1B3D] p-6 rounded-lg shadow-lg">
+          <div className="flex items-center gap-4">
+            <img src="https://kanakademi.com.tr/wp-content/uploads/2024/08/cropped-kanakademi-logo.png" alt="Kan Akademi" className="h-12 object-contain bg-white rounded p-1" />
+            <h1 className="text-3xl font-black text-white">Admin Paneli</h1>
+          </div>
+          <button onClick={() => setIsAuthenticated(false)} className="text-white/80 font-bold hover:text-white bg-white/10 px-4 py-2 rounded transition-colors">
             Çıkış Yap
           </button>
         </div>
@@ -149,13 +152,13 @@ export default function AdminPage() {
         <div className="flex gap-4 mb-6 border-b-2 border-gray-300 pb-2">
           <button 
             onClick={() => setActiveTab("library")} 
-            className={`text-2xl font-bold px-4 py-2 rounded ${activeTab === "library" ? 'bg-[#fd3e04] text-white' : 'text-gray-500 hover:bg-gray-200'}`}
+            className={`text-2xl font-bold px-4 py-2 rounded transition-colors ${activeTab === "library" ? 'bg-[#0B1B3D] text-white shadow-md' : 'text-gray-500 hover:bg-gray-200'}`}
           >
             Kütüphane
           </button>
           <button 
             onClick={() => setActiveTab("stats")} 
-            className={`text-2xl font-bold px-4 py-2 rounded ${activeTab === "stats" ? 'bg-[#fd3e04] text-white' : 'text-gray-500 hover:bg-gray-200'}`}
+            className={`text-2xl font-bold px-4 py-2 rounded transition-colors ${activeTab === "stats" ? 'bg-[#0B1B3D] text-white shadow-md' : 'text-gray-500 hover:bg-gray-200'}`}
           >
             Sonuçlar & İstatistikler
           </button>

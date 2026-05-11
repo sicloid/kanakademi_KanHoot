@@ -23,6 +23,14 @@ const itemVariants: any = {
   },
 };
 
+const leaderboardItemVariants: any = {
+  hidden: { x: -100, opacity: 0 },
+  visible: { 
+    x: 0, opacity: 1, 
+    transition: { type: "spring", stiffness: 300, damping: 24 } 
+  },
+};
+
 const viewVariants: any = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.3 } },
@@ -66,6 +74,7 @@ export default function HostPage() {
   const [joinUrl, setJoinUrl] = useState("Yükleniyor...");
   const [qrUrl, setQrUrl] = useState("");
   const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [quizTitle, setQuizTitle] = useState("");
 
   // Question state
   const [questionText, setQuestionText] = useState("");
@@ -89,20 +98,42 @@ export default function HostPage() {
   useEffect(() => {
     setJoinUrl(window.location.host + "/play");
     setQrUrl(window.location.origin + "/play");
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || "wss://vpn.sicloid.xyz:8443";
+    const wsUrl = process.env.NODE_ENV === "production" ? "wss://vpn.sicloid.xyz:8443" : "ws://localhost:8080";
     const client = new WSClient(`${wsUrl}/ws/host`);
     wsRef.current = client;
 
-    client.on("game_created", (data) => {
+    client.on("game_created", async (data) => {
       setPin(data.pin);
       
-      const pendingQuiz = localStorage.getItem("pendingQuiz");
-      if (pendingQuiz) {
+      const searchParams = new URLSearchParams(window.location.search);
+      const quizId = searchParams.get('quizId');
+      
+      if (quizId) {
         try {
-          const questions = JSON.parse(pendingQuiz);
+          const res = await fetch(`/api/kanhoots?id=${quizId}`, {
+            headers: { 'X-Admin-Key': 'Kanakademi2026' }
+          });
+          if (res.ok) {
+            const kanhoot = await res.json();
+            setQuizTitle(kanhoot.title);
+            client.send("set_questions", { questions: kanhoot.questions });
+            setImportStatus("Kütüphaneden yüklendi! Başlamaya hazır.");
+            return;
+          }
+        } catch(e) {
+          console.error("Failed to load kanhoot from API", e);
+        }
+      }
+      
+      // Fallback to local storage
+      const pendingQuizStr = localStorage.getItem("pendingQuiz");
+      if (pendingQuizStr) {
+        try {
+          const kanhoot = JSON.parse(pendingQuizStr);
+          if (kanhoot.title) setQuizTitle(kanhoot.title);
+          const questions = kanhoot.questions || kanhoot; // handle old format just in case
           client.send("set_questions", { questions });
           setImportStatus("Kütüphaneden yüklendi! Başlamaya hazır.");
-          localStorage.removeItem("pendingQuiz");
         } catch(e) {}
       }
     });
@@ -128,31 +159,7 @@ export default function HostPage() {
       setCurrentQ(data.current);
       setTotalQ(data.total);
       setCorrectIndex(null);
-      
-      if (data.current === 1) {
-        // Show get ready screen for 3 seconds before showing FIRST question
-        setStatus("get_ready");
-        let counter = 3;
-        setReadyCountdown(counter);
-        
-        const timer = setInterval(() => {
-          counter--;
-          setReadyCountdown(counter);
-          if (counter === 0) {
-            clearInterval(timer);
-            setStatus("question");
-            setTimeLeft(data.timeLimit);
-          }
-        }, 1000);
-      } else {
-        // For subsequent questions, start immediately with a brief 1-second transition
-        setStatus("get_ready");
-        setReadyCountdown("Hazır...");
-        setTimeout(() => {
-          setStatus("question");
-          setTimeLeft(data.timeLimit);
-        }, 1000);
-      }
+      setStatus("question");
     });
 
     client.on("question_ended", (data) => {
@@ -169,7 +176,16 @@ export default function HostPage() {
 
     client.connect();
 
-    return () => client.close();
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      client.close();
+    };
   }, []);
 
   // Timer logic for Questions
@@ -233,7 +249,7 @@ export default function HostPage() {
   const showLeaderboard = () => setStatus("leaderboard");
 
   return (
-    <div className="min-h-screen bg-[#f2f2f2] flex flex-col font-sans overflow-hidden">
+    <div className={`min-h-screen flex flex-col font-sans overflow-hidden ${["waiting", "get_ready", "podium"].includes(status) ? 'bg-gradient-to-br from-[#0B1B3D] to-[#1a2e5a]' : 'bg-[#f2f2f2]'}`}>
       <AnimatePresence mode="wait">
         
         {status === "lobby" && (
@@ -245,13 +261,13 @@ export default function HostPage() {
             exit="exit"
             className="flex-1 flex flex-col items-center p-0 relative"
             style={{
-              background: "linear-gradient(135deg, #fd3e04 0%, #d23100 100%)",
+              background: "linear-gradient(135deg, #fd3e04 0%, #0B1B3D 100%)",
             }}
           >
             {/* Top Bar matching Kanhoot */}
             <div className="w-full bg-white/95 backdrop-blur-sm shadow-sm py-4 px-8 flex justify-between items-center z-10 rounded-b-xl mb-8">
               <div className="flex items-center gap-4">
-                <img src="https://kanakademi.com.tr/wp-content/uploads/2024/08/cropped-kanakademi-logo.png" alt="Kan Akademi" className="h-10 object-contain mr-4" />
+                <img src="https://kanakademi.com/wp-content/uploads/2024/08/cropped-kanakademi-logo.png" alt="Kan Akademi" className="h-10 object-contain mr-4" />
                 <span className="text-2xl font-bold text-[#333]">Oyuna katılmak için</span>
                 <span className="text-3xl font-black text-[#fd3e04]">{joinUrl}</span>
                 <span className="text-2xl font-bold text-[#333]">adresine git</span>
@@ -263,7 +279,7 @@ export default function HostPage() {
                     placeholder="Kanhoot linki yapıştır (Opsiyonel)" 
                     value={kanhootLink}
                     onChange={(e) => setKanhootLink(e.target.value)}
-                    className="bg-transparent border-none outline-none text-sm font-semibold w-64 text-gray-700"
+                    className="bg-transparent border-none outline-none text-sm font-semibold w-64 text-black placeholder-gray-500"
                   />
                   <button 
                     onClick={importKanhoot}
@@ -287,6 +303,9 @@ export default function HostPage() {
                 transition={{ type: "spring", bounce: 0.5 }}
                 className="bg-white rounded-lg shadow-2xl p-8 flex flex-col items-center justify-center min-w-[400px] border-b-8 border-gray-200"
               >
+                {quizTitle && (
+                  <h1 className="text-3xl font-black text-center text-[#fd3e04] mb-4 uppercase tracking-wider">{quizTitle}</h1>
+                )}
                 <h2 className="text-2xl font-bold text-gray-500 mb-2">Oyun PIN'i</h2>
                 <div className="text-7xl md:text-8xl font-black tracking-tight text-[#333]">
                   {pin || "..."}
@@ -354,7 +373,7 @@ export default function HostPage() {
                   >
                     <div className="w-full flex justify-between items-center mb-6">
                       <div className="flex items-center gap-3">
-                        <img src="https://kanakademi.com.tr/wp-content/uploads/2024/08/cropped-kanakademi-logo.png" alt="Kan Akademi" className="h-8 object-contain" />
+                        <img src="https://kanakademi.com/wp-content/uploads/2024/08/cropped-kanakademi-logo.png" alt="Kan Akademi" className="h-8 object-contain" />
                         <h2 className="text-2xl font-bold text-gray-800">Oyuna Katıl</h2>
                       </div>
                       <button 
@@ -413,7 +432,7 @@ export default function HostPage() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex flex-col items-center justify-center bg-[#fd3e04]"
+            className="flex-1 flex flex-col items-center justify-center"
           >
             <h2 className="text-4xl md:text-6xl font-black text-white mb-12 tracking-tight">Hazır Ol!</h2>
             <motion.div 
@@ -546,7 +565,7 @@ export default function HostPage() {
               {leaderboard.slice(0, 5).map((player, index) => (
                 <motion.div 
                   key={player.id} 
-                  variants={itemVariants}
+                  variants={leaderboardItemVariants}
                   className="bg-white p-5 rounded shadow-sm border border-gray-200 flex justify-between items-center"
                 >
                   <div className="flex items-center gap-6">
@@ -569,7 +588,7 @@ export default function HostPage() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex flex-col items-center justify-end w-full relative bg-[#fd3e04] overflow-hidden"
+            className="flex-1 flex flex-col items-center justify-end w-full relative overflow-hidden"
           >
             <h2 className="text-5xl md:text-7xl font-black text-white mt-12 absolute top-12 tracking-tight drop-shadow-lg">Podyum</h2>
             

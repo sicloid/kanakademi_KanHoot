@@ -3,6 +3,17 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (id) {
+      const kanhoot = await prisma.kanhoot.findUnique({
+        where: { id },
+        include: { questions: true }
+      });
+      return NextResponse.json(kanhoot);
+    }
+
     const kanhoots = await prisma.kanhoot.findMany({
       include: {
         questions: true
