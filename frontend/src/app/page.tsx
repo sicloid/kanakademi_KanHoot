@@ -97,7 +97,7 @@ export default function HostPage() {
   useEffect(() => {
     setJoinUrl(window.location.host + "/play");
     setQrUrl(window.location.origin + "/play");
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || "wss://vpn.sicloid.xyz:8443";
+    const wsUrl = process.env.NODE_ENV === "production" ? "wss://vpn.sicloid.xyz:8443" : "ws://localhost:8080";
     const client = new WSClient(`${wsUrl}/ws/host`);
     wsRef.current = client;
 

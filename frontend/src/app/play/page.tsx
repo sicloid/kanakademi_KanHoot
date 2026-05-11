@@ -87,7 +87,7 @@ function PlayScreen() {
       localStorage.setItem("kanhoot_player_id", playerId);
     }
 
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || "wss://vpn.sicloid.xyz:8443";
+    const wsUrl = process.env.NODE_ENV === "production" ? "wss://vpn.sicloid.xyz:8443" : "ws://localhost:8080";
     const client = new WSClient(`${wsUrl}/ws/player?pin=${pin}&name=${encodeURIComponent(name)}&id=${playerId}`);
     wsRef.current = client;
 
