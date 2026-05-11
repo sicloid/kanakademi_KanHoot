@@ -9,8 +9,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Kanhoot Clone",
-  description: "Kanhoot Clone with Next.js and Go WebSocket",
+  title: "Kanhoot!",
+  description: "Interactive learning platform",
 };
 
 export default function RootLayout({

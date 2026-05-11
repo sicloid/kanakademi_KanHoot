@@ -169,7 +169,7 @@ export default function AdminPage() {
                   placeholder="https://create.kahoot.it/share/... linkini yapıştır"
                   value={importUrl}
                   onChange={(e) => setImportUrl(e.target.value)}
-                  className="flex-1 p-3 border-2 border-gray-300 rounded focus:border-[#fd3e04] outline-none font-medium"
+                  className="flex-1 p-3 border-2 border-gray-300 rounded focus:border-[#fd3e04] outline-none font-medium text-gray-900"
                 />
                 <button 
                   type="submit" 

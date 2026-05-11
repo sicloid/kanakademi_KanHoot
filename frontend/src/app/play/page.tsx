@@ -148,7 +148,7 @@ function PlayScreen() {
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
                   readOnly={!!urlPin}
-                  className={`w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-400 ${urlPin ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : ''}`}
+                  className={`w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-400 text-gray-900 ${urlPin ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                 />
                 <input
                   type="text"
@@ -156,7 +156,7 @@ function PlayScreen() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   autoFocus
-                  className="w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-400"
+                  className="w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-400 text-gray-900"
                 />
                 <motion.button
                   whileTap={{ y: 2 }}
