@@ -5,7 +5,7 @@ import { WSClient } from "@/lib/websocket";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 
-type Status = "join" | "waiting" | "question" | "answered" | "result" | "podium";
+type Status = "join" | "waiting" | "get_ready" | "question" | "answered" | "result" | "podium";
 
 const containerVariants: any = {
   hidden: { opacity: 0 },
@@ -138,17 +138,21 @@ function PlayScreen() {
             animate="visible"
             exit="exit"
             className="flex-1 flex flex-col items-center justify-center p-4"
+            style={{
+              background: "linear-gradient(135deg, #fd3e04 0%, #0B1B3D 100%)",
+            }}
           >
-            <div className="w-full max-w-sm bg-white p-6 rounded-md shadow-sm border border-gray-200 text-center">
-              <h1 className="text-4xl font-black mb-6 text-[#333333] tracking-tighter">Kanhoot!</h1>
-              <form onSubmit={handleJoin} className="space-y-3">
+            <div className="w-full max-w-sm bg-white/95 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-white/20 text-center relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#0B1B3D] to-[#fd3e04]"></div>
+              <img src="https://kanakademi.com/wp-content/uploads/2024/08/cropped-kanakademi-logo.png" alt="Kan Akademi" className="h-16 mx-auto mb-6 object-contain" />
+              <form onSubmit={handleJoin} className="space-y-4">
                 <input
                   type="text"
                   placeholder="Oyun PIN'i"
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
                   readOnly={!!urlPin}
-                  className={`w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-400 text-gray-900 ${urlPin ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                  className={`w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-400 text-black ${urlPin ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                 />
                 <input
                   type="text"
@@ -156,7 +160,7 @@ function PlayScreen() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   autoFocus
-                  className="w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-400 text-gray-900"
+                  className="w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-400 text-black"
                 />
                 <motion.button
                   whileTap={{ y: 2 }}
@@ -179,14 +183,39 @@ function PlayScreen() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex items-center justify-center bg-[#46178f] p-4"
+            className="flex-1 flex items-center justify-center p-4 relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, #fd3e04 0%, #0B1B3D 100%)",
+            }}
           >
             <motion.h2 
               animate={{ opacity: [0.6, 1, 0.6] }}
               transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              className="text-3xl md:text-5xl font-black text-white text-center leading-tight tracking-tight"
+              className="text-3xl md:text-5xl font-black text-white text-center leading-tight tracking-tight relative z-10"
             >
               İçeridesin!<br />Adını ana ekranda görebilirsin
+            </motion.h2>
+          </motion.div>
+        )}
+
+        {status === "get_ready" && (
+          <motion.div 
+            key="get_ready"
+            variants={viewVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="flex-1 flex items-center justify-center p-4 relative overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, #fd3e04 0%, #0B1B3D 100%)",
+            }}
+          >
+            <motion.h2 
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+              className="text-4xl md:text-6xl font-black text-white text-center relative z-10"
+            >
+              Hazırlan!
             </motion.h2>
           </motion.div>
         )}
@@ -221,28 +250,28 @@ function PlayScreen() {
               <Diamond />
             </motion.button>
             {optionCount > 2 && (
-              <>
-                <motion.button 
-                  variants={itemVariants}
-                  whileTap={{ scale: 0.96, filter: "brightness(0.9)" }}
-                  onClick={() => submitAnswer("yellow")}
-                  className="bg-[#d89e00] rounded flex items-center justify-center relative overflow-hidden"
-                  style={{ boxShadow: "inset 0 -6px 0 rgba(0,0,0,0.15)" }}
-                  aria-label="Yellow"
-                >
-                  <Circle />
-                </motion.button>
-                <motion.button 
-                  variants={itemVariants}
-                  whileTap={{ scale: 0.96, filter: "brightness(0.9)" }}
-                  onClick={() => submitAnswer("green")}
-                  className="bg-[#26890c] rounded flex items-center justify-center relative overflow-hidden"
-                  style={{ boxShadow: "inset 0 -6px 0 rgba(0,0,0,0.15)" }}
-                  aria-label="Green"
-                >
-                  <Square />
-                </motion.button>
-              </>
+              <motion.button 
+                variants={itemVariants}
+                whileTap={{ scale: 0.96, filter: "brightness(0.9)" }}
+                onClick={() => submitAnswer("yellow")}
+                className="bg-[#d89e00] rounded flex items-center justify-center relative overflow-hidden"
+                style={{ boxShadow: "inset 0 -6px 0 rgba(0,0,0,0.15)" }}
+                aria-label="Yellow"
+              >
+                <Circle />
+              </motion.button>
+            )}
+            {optionCount > 3 && (
+              <motion.button 
+                variants={itemVariants}
+                whileTap={{ scale: 0.96, filter: "brightness(0.9)" }}
+                onClick={() => submitAnswer("green")}
+                className="bg-[#26890c] rounded flex items-center justify-center relative overflow-hidden"
+                style={{ boxShadow: "inset 0 -6px 0 rgba(0,0,0,0.15)" }}
+                aria-label="Green"
+              >
+                <Square />
+              </motion.button>
             )}
           </motion.div>
         )}

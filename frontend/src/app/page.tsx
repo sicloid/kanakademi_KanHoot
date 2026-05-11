@@ -23,6 +23,14 @@ const itemVariants: any = {
   },
 };
 
+const leaderboardItemVariants: any = {
+  hidden: { x: -100, opacity: 0 },
+  visible: { 
+    x: 0, opacity: 1, 
+    transition: { type: "spring", stiffness: 300, damping: 24 } 
+  },
+};
+
 const viewVariants: any = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.3 } },
@@ -128,31 +136,7 @@ export default function HostPage() {
       setCurrentQ(data.current);
       setTotalQ(data.total);
       setCorrectIndex(null);
-      
-      if (data.current === 1) {
-        // Show get ready screen for 3 seconds before showing FIRST question
-        setStatus("get_ready");
-        let counter = 3;
-        setReadyCountdown(counter);
-        
-        const timer = setInterval(() => {
-          counter--;
-          setReadyCountdown(counter);
-          if (counter === 0) {
-            clearInterval(timer);
-            setStatus("question");
-            setTimeLeft(data.timeLimit);
-          }
-        }, 1000);
-      } else {
-        // For subsequent questions, start immediately with a brief 1-second transition
-        setStatus("get_ready");
-        setReadyCountdown("Hazır...");
-        setTimeout(() => {
-          setStatus("question");
-          setTimeLeft(data.timeLimit);
-        }, 1000);
-      }
+      setStatus("question");
     });
 
     client.on("question_ended", (data) => {
@@ -245,7 +229,7 @@ export default function HostPage() {
             exit="exit"
             className="flex-1 flex flex-col items-center p-0 relative"
             style={{
-              background: "linear-gradient(135deg, #fd3e04 0%, #d23100 100%)",
+              background: "linear-gradient(135deg, #fd3e04 0%, #0B1B3D 100%)",
             }}
           >
             {/* Top Bar matching Kanhoot */}
@@ -263,7 +247,7 @@ export default function HostPage() {
                     placeholder="Kanhoot linki yapıştır (Opsiyonel)" 
                     value={kanhootLink}
                     onChange={(e) => setKanhootLink(e.target.value)}
-                    className="bg-transparent border-none outline-none text-sm font-semibold w-64 text-gray-700"
+                    className="bg-transparent border-none outline-none text-sm font-semibold w-64 text-black placeholder-gray-500"
                   />
                   <button 
                     onClick={importKanhoot}
@@ -546,7 +530,7 @@ export default function HostPage() {
               {leaderboard.slice(0, 5).map((player, index) => (
                 <motion.div 
                   key={player.id} 
-                  variants={itemVariants}
+                  variants={leaderboardItemVariants}
                   className="bg-white p-5 rounded shadow-sm border border-gray-200 flex justify-between items-center"
                 >
                   <div className="flex items-center gap-6">
