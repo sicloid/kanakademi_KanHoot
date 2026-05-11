@@ -281,6 +281,7 @@ function PlayScreen() {
                 <Square />
               </motion.button>
             )}
+            </div>
           </motion.div>
         )}
 
@@ -301,10 +302,8 @@ function PlayScreen() {
             <div className="flex-1 flex items-center justify-center bg-[#f2f2f2] p-4">
               <div className="text-center">
                 <h2 className="text-4xl font-bold text-[#333] mb-8 tracking-tight">Cevap Bekleniyor...</h2>
-                <div className="flex justify-center gap-2">
-                  <motion.div animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0 }} className="w-5 h-5 bg-[#333] rounded-full"></motion.div>
-                  <motion.div animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0.2 }} className="w-5 h-5 bg-[#333] rounded-full"></motion.div>
-                  <motion.div animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0.4 }} className="w-5 h-5 bg-[#333] rounded-full"></motion.div>
+                <div className="flex justify-center">
+                  <img src="https://kanakademi.com.tr/wp-content/uploads/2024/10/Adsiz-tasarim-1.gif" alt="Bekleniyor..." className="w-24 h-24 object-contain" />
                 </div>
               </div>
             </div>
