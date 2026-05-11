@@ -49,7 +49,7 @@ export default function LandingPage() {
               </motion.button>
             </Link>
 
-            <div className="grid grid-cols-2 gap-4 mt-6">
+            <div className="mt-6">
               <Link href="/admin" className="block w-full">
                 <motion.button 
                   whileHover={{ scale: 1.05 }}
@@ -57,16 +57,6 @@ export default function LandingPage() {
                   className="w-full bg-[#0B1B3D] hover:bg-[#1a2e5a] text-white text-lg font-bold py-4 rounded-xl shadow-[0_4px_0_0_#051024] transition-colors"
                 >
                   Admin Paneli
-                </motion.button>
-              </Link>
-              
-              <Link href="/host" className="block w-full">
-                <motion.button 
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full bg-white text-[#0B1B3D] border-2 border-[#0B1B3D] text-lg font-bold py-4 rounded-xl shadow-[0_4px_0_0_#0B1B3D] hover:bg-gray-50 transition-colors"
-                >
-                  Host Ekranı
                 </motion.button>
               </Link>
             </div>

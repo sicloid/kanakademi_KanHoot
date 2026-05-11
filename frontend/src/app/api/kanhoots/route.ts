@@ -7,14 +7,14 @@ export async function GET(request: Request) {
     const id = searchParams.get('id');
 
     if (id) {
-      const kanhoot = await prisma.kanhoot.findUnique({
+      const kanhoot = await prisma.kanhoot_quizzes.findUnique({
         where: { id },
         include: { questions: true }
       });
       return NextResponse.json(kanhoot);
     }
 
-    const kanhoots = await prisma.kanhoot.findMany({
+    const kanhoots = await prisma.kanhoot_quizzes.findMany({
       include: {
         questions: true
       },
@@ -39,31 +39,53 @@ export async function POST(request: Request) {
     }
 
     if (data.id) {
-      // Update existing
-      // First delete old questions
-      await prisma.question.deleteMany({
-        where: { kanhootId: data.id }
-      });
+      const existing = await prisma.kanhoot_quizzes.findUnique({ where: { id: data.id } });
       
-      const updated = await prisma.kanhoot.update({
-        where: { id: data.id },
-        data: {
-          title: data.title,
-          questions: {
-            create: data.questions.map((q: any) => ({
-              question: q.question,
-              time_limit_sec: Number(q.time_limit_sec),
-              options: q.options,
-              correct_index: Number(q.correct_index)
-            }))
-          }
-        },
-        include: { questions: true }
-      });
-      return NextResponse.json(updated);
+      if (existing) {
+        // Update existing
+        // First delete old questions
+        await prisma.kanhoot_questions.deleteMany({
+          where: { quizId: data.id }
+        });
+        
+        const updated = await prisma.kanhoot_quizzes.update({
+          where: { id: data.id },
+          data: {
+            title: data.title,
+            questions: {
+              create: data.questions.map((q: any) => ({
+                question: q.question,
+                time_limit_sec: Number(q.time_limit_sec),
+                options: q.options,
+                correct_index: Number(q.correct_index)
+              }))
+            }
+          },
+          include: { questions: true }
+        });
+        return NextResponse.json(updated);
+      } else {
+        // Create new with the specific ID
+        const created = await prisma.kanhoot_quizzes.create({
+          data: {
+            id: data.id,
+            title: data.title,
+            questions: {
+              create: data.questions.map((q: any) => ({
+                question: q.question,
+                time_limit_sec: Number(q.time_limit_sec),
+                options: q.options,
+                correct_index: Number(q.correct_index)
+              }))
+            }
+          },
+          include: { questions: true }
+        });
+        return NextResponse.json(created);
+      }
     } else {
-      // Create new
-      const created = await prisma.kanhoot.create({
+      // Create new without ID (Prisma generates UUID)
+      const created = await prisma.kanhoot_quizzes.create({
         data: {
           title: data.title,
           questions: {

@@ -144,7 +144,7 @@ function PlayScreen() {
           >
             <div className="w-full max-w-sm bg-white/95 backdrop-blur-md p-8 rounded-2xl shadow-2xl border border-white/20 text-center relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#0B1B3D] to-[#fd3e04]"></div>
-              <img src="https://kanakademi.com/wp-content/uploads/2024/08/cropped-kanakademi-logo.png" alt="Kan Akademi" className="h-16 mx-auto mb-6 object-contain" />
+              <img src="https://kanakademi.com.tr/wp-content/uploads/2024/08/kanakademi-logo.png" alt="Kan Akademi" className="h-16 mx-auto mb-6 object-contain" />
               <form onSubmit={handleJoin} className="space-y-4">
                 <input
                   type="text"
@@ -152,7 +152,7 @@ function PlayScreen() {
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
                   readOnly={!!urlPin}
-                  className={`w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-400 text-black ${urlPin ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                  className={`w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-500 text-black ${urlPin ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}`}
                 />
                 <input
                   type="text"
@@ -160,7 +160,7 @@ function PlayScreen() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   autoFocus
-                  className="w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-400 text-black"
+                  className="w-full text-center text-xl font-bold p-3 border-2 border-[#cccccc] rounded focus:border-[#333] focus:outline-none placeholder-gray-500 text-black bg-white"
                 />
                 <motion.button
                   whileTap={{ y: 2 }}
@@ -227,8 +227,16 @@ function PlayScreen() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className={`flex-1 grid gap-2 p-2 bg-[#f2f2f2] ${optionCount === 2 ? 'grid-cols-1 grid-rows-2' : 'grid-cols-2 grid-rows-2'}`}
+            className="flex-1 flex flex-col"
           >
+            {/* Top Bar with Logo */}
+            <div className="w-full bg-white shadow-sm py-3 px-4 flex justify-between items-center z-10 border-b-2 border-gray-200">
+               <img src="https://kanakademi.com.tr/wp-content/uploads/2024/08/kanakademi-logo.png" alt="Kan Akademi" className="h-6 object-contain" />
+               <span className="font-black text-[#fd3e04]">Kanhoot!</span>
+            </div>
+
+            <div className={`flex-1 grid gap-2 p-2 bg-[#f2f2f2] ${optionCount === 2 ? 'grid-cols-1 grid-rows-2' : 'grid-cols-2 grid-rows-2'}`}>
+
             <motion.button 
               variants={itemVariants}
               whileTap={{ scale: 0.96, filter: "brightness(0.9)" }}
@@ -283,14 +291,21 @@ function PlayScreen() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex items-center justify-center bg-[#f2f2f2] p-4"
+            className="flex-1 flex flex-col"
           >
-            <div className="text-center">
-              <h2 className="text-4xl font-bold text-[#333] mb-8 tracking-tight">Cevap Bekleniyor...</h2>
-              <div className="flex justify-center gap-2">
-                <motion.div animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0 }} className="w-5 h-5 bg-[#333] rounded-full"></motion.div>
-                <motion.div animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0.2 }} className="w-5 h-5 bg-[#333] rounded-full"></motion.div>
-                <motion.div animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0.4 }} className="w-5 h-5 bg-[#333] rounded-full"></motion.div>
+            {/* Top Bar with Logo */}
+            <div className="w-full bg-white shadow-sm py-3 px-4 flex justify-between items-center z-10 border-b-2 border-gray-200">
+               <img src="https://kanakademi.com.tr/wp-content/uploads/2024/08/kanakademi-logo.png" alt="Kan Akademi" className="h-6 object-contain" />
+               <span className="font-black text-[#fd3e04]">Kanhoot!</span>
+            </div>
+            <div className="flex-1 flex items-center justify-center bg-[#f2f2f2] p-4">
+              <div className="text-center">
+                <h2 className="text-4xl font-bold text-[#333] mb-8 tracking-tight">Cevap Bekleniyor...</h2>
+                <div className="flex justify-center gap-2">
+                  <motion.div animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0 }} className="w-5 h-5 bg-[#333] rounded-full"></motion.div>
+                  <motion.div animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0.2 }} className="w-5 h-5 bg-[#333] rounded-full"></motion.div>
+                  <motion.div animate={{ scale: [1, 1.5, 1] }} transition={{ duration: 1, repeat: Infinity, delay: 0.4 }} className="w-5 h-5 bg-[#333] rounded-full"></motion.div>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -303,9 +318,15 @@ function PlayScreen() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className={`flex-1 flex flex-col items-center justify-center p-4 transition-colors duration-500 ${isCorrect ? 'bg-[#66bf39]' : 'bg-[#ff3355]'}`}
+            className="flex-1 flex flex-col"
           >
-            <div className="text-center text-white w-full max-w-sm">
+            {/* Top Bar with Logo */}
+            <div className="w-full bg-white shadow-sm py-3 px-4 flex justify-between items-center z-10 border-b-2 border-gray-200">
+               <img src="https://kanakademi.com.tr/wp-content/uploads/2024/08/kanakademi-logo.png" alt="Kan Akademi" className="h-6 object-contain" />
+               <span className="font-black text-[#fd3e04]">Kanhoot!</span>
+            </div>
+            <div className={`flex-1 flex flex-col items-center justify-center p-4 transition-colors duration-500 ${isCorrect ? 'bg-[#66bf39]' : 'bg-[#ff3355]'}`}>
+              <div className="text-center text-white w-full max-w-sm">
               <motion.h2 
                 initial={{ scale: 0, rotate: -10 }}
                 animate={{ scale: 1, rotate: 0 }}
@@ -332,6 +353,7 @@ function PlayScreen() {
                 <p className="text-xl font-bold">Puanın</p>
                 <p className="text-3xl font-black">{score}</p>
               </motion.div>
+            </div>
             </div>
           </motion.div>
         )}

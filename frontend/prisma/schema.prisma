@@ -1,29 +1,98 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "postgresql"
 }
 
-model Kanhoot {
-  id        String     @id @default(uuid())
-  title     String
-  createdAt DateTime   @default(now())
-  questions Question[]
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model game_sessions {
+  id                  String               @id
+  sessionToken        String               @unique
+  memeIds             String[]
+  startedAt           DateTime             @default(now())
+  expiresAt           DateTime
+  completed           Boolean              @default(false)
+  ipAddress           String?
+  leaderboard_entries leaderboard_entries?
 }
 
-model Question {
-  id             String  @id @default(uuid())
-  kanhootId      String
-  kanhoot        Kanhoot @relation(fields: [kanhootId], references: [id], onDelete: Cascade)
-  question       String
-  time_limit_sec Int     @default(20)
-  options        Json    // Array of strings
-  correct_index  Int     @default(0)
+model kanakademi_test_results {
+  id        String   @id
+  score     Int
+  profile   String
+  createdAt DateTime @default(now())
+  name      String   @default("Anonim")
+  bloodType String   @default("Bilinmiyor")
+}
+
+model kanhoot_questions {
+  id              String          @id @default(uuid())
+  quizId          String
+  question        String
+  time_limit_sec  Int
+  options         String[]        @default([])
+  correct_index   Int
+  kanhoot_quizzes kanhoot_quizzes @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+model kanhoot_quizzes {
+  id                String              @id @default(uuid())
+  title             String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  questions         kanhoot_questions[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model leaderboard_archives {
+  id         String   @id
+  snapshot   String
+  entryCount Int
+  topPlayer  String?
+  topScore   Int      @default(0)
+  archivedAt DateTime @default(now())
+
+  @@index([archivedAt(sort: Desc)], map: "idx_archive_date")
+  @@index([archivedAt(sort: Desc)])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model leaderboard_entries {
+  id            String        @id
+  username      String
+  score         Int
+  correctCount  Int
+  totalTime     Int
+  sessionId     String        @unique
+  createdAt     DateTime      @default(now())
+  game_sessions game_sessions @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([score(sort: Desc)], map: "idx_leaderboard_score")
+  @@index([score(sort: Desc)])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model memes {
+  id              String   @id
+  youtubeUrl      String
+  startTime       Int      @default(0)
+  endTime         Int      @default(60)
+  correctOptionId String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime
+  imageUrl        String?
+  timesShown      Int      @default(0)
+  timesCorrect    Int      @default(0)
+  options         options  @relation(fields: [correctOptionId], references: [id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model options {
+  id        String   @id
+  text      String   @unique
+  createdAt DateTime @default(now())
+  memes     memes[]
 }

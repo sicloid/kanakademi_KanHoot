@@ -179,7 +179,7 @@ export default function KanhootBuilder({
             type="text" 
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="text-2xl font-black text-black border-b-2 border-transparent focus:border-[#fd3e04] outline-none bg-white w-1/2 placeholder-gray-400 transition-colors px-2 py-1"
+            className="text-2xl font-black text-black border-b-2 border-transparent focus:border-[#fd3e04] outline-none bg-white w-1/2 placeholder-gray-500 transition-colors px-2 py-1"
             placeholder="Kanhoot Başlığı"
           />
           <div className="flex gap-3">
@@ -211,7 +211,7 @@ export default function KanhootBuilder({
                   value={activeQ.question}
                   onChange={(e) => handleQuestionChange(e.target.value)}
                   placeholder="Sorunuzu buraya yazın"
-                  className="w-full text-3xl md:text-4xl font-black text-center text-black bg-white outline-none placeholder-gray-300"
+                  className="w-full text-3xl md:text-4xl font-black text-center text-black bg-white outline-none placeholder-gray-500"
                 />
               </div>
 

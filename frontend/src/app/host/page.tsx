@@ -267,7 +267,7 @@ export default function HostPage() {
             {/* Top Bar matching Kanhoot */}
             <div className="w-full bg-white/95 backdrop-blur-sm shadow-sm py-4 px-8 flex justify-between items-center z-10 rounded-b-xl mb-8">
               <div className="flex items-center gap-4">
-                <img src="https://kanakademi.com/wp-content/uploads/2024/08/cropped-kanakademi-logo.png" alt="Kan Akademi" className="h-10 object-contain mr-4" />
+                <img src="https://kanakademi.com.tr/wp-content/uploads/2024/08/kanakademi-logo.png" alt="Kan Akademi" className="h-10 object-contain mr-4" />
                 <span className="text-2xl font-bold text-[#333]">Oyuna katılmak için</span>
                 <span className="text-3xl font-black text-[#fd3e04]">{joinUrl}</span>
                 <span className="text-2xl font-bold text-[#333]">adresine git</span>
@@ -373,7 +373,7 @@ export default function HostPage() {
                   >
                     <div className="w-full flex justify-between items-center mb-6">
                       <div className="flex items-center gap-3">
-                        <img src="https://kanakademi.com/wp-content/uploads/2024/08/cropped-kanakademi-logo.png" alt="Kan Akademi" className="h-8 object-contain" />
+                        <img src="https://kanakademi.com.tr/wp-content/uploads/2024/08/kanakademi-logo.png" alt="Kan Akademi" className="h-8 object-contain" />
                         <h2 className="text-2xl font-bold text-gray-800">Oyuna Katıl</h2>
                       </div>
                       <button 
@@ -519,6 +519,7 @@ export default function HostPage() {
                       <div className="flex-shrink-0 w-12 md:w-16 flex items-center justify-center mr-4">
                         <Icon className="w-10 h-10 md:w-12 md:h-12 fill-white" />
                       </div>
+                      <span className="text-white/80 font-black text-2xl md:text-3xl mr-4 uppercase">{String.fromCharCode(65 + i)}</span>
                       <span className="text-white text-2xl md:text-3xl font-bold flex-1 leading-tight drop-shadow-sm">{opt}</span>
                       
                       {/* Checkmark for correct answer */}

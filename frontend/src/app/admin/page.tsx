@@ -72,17 +72,21 @@ export default function AdminPage() {
     try {
       const parts = importUrl.split("/");
       const uuid = parts[parts.length - 1];
-      const res = await fetch(`https://create.kahoot.it/rest/kahoots/${uuid}`);
+      const res = await fetch(`${API_URL}/api/proxy-kanhoot?uuid=${uuid}`);
       const data = await res.json();
+      
+      if (!res.ok || data.error) {
+        throw new Error(data.error || "Kanhoot çekilemedi");
+      }
 
       const newQuiz: KanhootQuiz = {
         id: uuid,
         title: data.title || "İçe Aktarılan Kanhoot",
         questions: data.questions.map((kq: any) => ({
-          question: kq.question.replace(/<[^>]*>/g, '').trim(),
-          time_limit_sec: kq.time / 1000,
-          options: kq.choices.map((c: any) => c.answer),
-          correct_index: kq.choices.findIndex((c: any) => c.correct)
+          question: (kq.question || "").replace(/<[^>]*>/g, '').trim() || "Soru",
+          time_limit_sec: Math.round(Number(kq.time) / 1000) || 20,
+          options: kq.choices ? kq.choices.map((c: any) => c.answer || "") : ["A", "B", "C", "D"],
+          correct_index: kq.choices ? Math.max(0, kq.choices.findIndex((c: any) => c.correct)) : 0
         }))
       };
 
@@ -122,7 +126,7 @@ export default function AdminPage() {
               placeholder="Şifre"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full text-center text-xl font-bold p-3 border-2 border-gray-300 rounded focus:border-[#fd3e04] focus:outline-none"
+              className="w-full text-center text-black placeholder-gray-500 bg-white text-xl font-bold p-3 border-2 border-gray-300 rounded focus:border-[#fd3e04] focus:outline-none"
             />
             <button
               type="submit"
@@ -141,7 +145,7 @@ export default function AdminPage() {
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between mb-8 bg-[#0B1B3D] p-6 rounded-lg shadow-lg">
           <div className="flex items-center gap-4">
-            <img src="https://kanakademi.com.tr/wp-content/uploads/2024/08/cropped-kanakademi-logo.png" alt="Kan Akademi" className="h-12 object-contain bg-white rounded p-1" />
+            <img src="https://kanakademi.com.tr/wp-content/uploads/2024/08/kanakademi-logo.png" alt="Kan Akademi" className="h-12 object-contain bg-white rounded p-1" />
             <h1 className="text-3xl font-black text-white">Admin Paneli</h1>
           </div>
           <button onClick={() => setIsAuthenticated(false)} className="text-white/80 font-bold hover:text-white bg-white/10 px-4 py-2 rounded transition-colors">
