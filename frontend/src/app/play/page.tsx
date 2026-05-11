@@ -106,9 +106,11 @@ function PlayScreen() {
     });
 
     client.on("question_ended", (data) => {
-      setScore(data.score);
-      setGainedScore(data.score - score);
-      setIsCorrect(data.score > score);
+      setScore(prevScore => {
+        setGainedScore(data.score - prevScore);
+        setIsCorrect(data.score > prevScore);
+        return data.score;
+      });
       setStatus("result");
     });
 
@@ -120,9 +122,9 @@ function PlayScreen() {
   };
 
   const submitAnswer = (color: string) => {
-    if (wsRef.current && status === "question") {
+    if (wsRef.current) {
       wsRef.current.send("answer", { color });
-      setStatus("answered");
+      setStatus(prev => prev === "question" ? "answered" : prev);
     }
   };
 
