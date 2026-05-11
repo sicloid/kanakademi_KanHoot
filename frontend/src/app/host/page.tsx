@@ -84,6 +84,7 @@ export default function HostPage() {
   const [correctIndex, setCorrectIndex] = useState<number | null>(null);
   const [currentQ, setCurrentQ] = useState(0);
   const [totalQ, setTotalQ] = useState(0);
+  const [answersCount, setAnswersCount] = useState(0);
 
   // Countdown state
   const [readyCountdown, setReadyCountdown] = useState<number | string>(3);
@@ -159,7 +160,12 @@ export default function HostPage() {
       setCurrentQ(data.current);
       setTotalQ(data.total);
       setCorrectIndex(null);
+      setAnswersCount(0);
       setStatus("question");
+    });
+
+    client.on("answer_received", (data) => {
+      setAnswersCount((prev) => prev + 1);
     });
 
     client.on("question_ended", (data) => {
@@ -479,6 +485,13 @@ export default function HostPage() {
               >
                 {timeLeft}
               </motion.div>
+
+              {status === "question" && (
+                <div className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col items-end">
+                  <span className="text-xl font-bold text-[#333] mb-1">Cevaplar</span>
+                  <div className="text-5xl font-black text-[#333] bg-white px-6 py-2 rounded-lg shadow-sm border border-gray-200">{answersCount}</div>
+                </div>
+              )}
 
               {/* Next Button (Result State) */}
               {status === "result" && (
