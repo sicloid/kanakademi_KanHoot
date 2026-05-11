@@ -98,7 +98,7 @@ export default function KanhootBuilder({
       };
       if (initialData?.id) payload.id = initialData.id;
 
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://vpn.sicloid.xyz:8443";
+      const API_URL = "";
 
       const res = await fetch(`${API_URL}/api/kanhoots`, {
         method: "POST",
