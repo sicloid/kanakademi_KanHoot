@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import KanhootBuilder from "../../components/KanhootBuilder";
 
 type KanhootQuiz = {
   id: string;
@@ -24,6 +25,7 @@ export default function AdminPage() {
   const [stats, setStats] = useState<GameStat[]>([]);
   const [importUrl, setImportUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [editingQuiz, setEditingQuiz] = useState<KanhootQuiz | null | "new">(null);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://188.132.232.104:8080";
 
@@ -159,10 +161,19 @@ export default function AdminPage() {
           </button>
         </div>
 
-        {activeTab === "library" && (
+        {activeTab === "library" && editingQuiz === null && (
           <div className="space-y-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-gray-800">Kütüphane</h2>
+              <button 
+                onClick={() => setEditingQuiz("new")}
+                className="bg-[#0B1B3D] text-white font-bold px-6 py-2 rounded hover:bg-[#1a2e5a] transition-colors"
+              >
+                + Yeni Oluştur
+              </button>
+            </div>
             <div className="bg-white p-6 rounded-lg shadow">
-              <h2 className="text-2xl font-bold mb-4 text-gray-800">Yeni Kanhoot İçe Aktar</h2>
+              <h2 className="text-xl font-bold mb-4 text-gray-800">Mevcut Kahoot Linkinden İçe Aktar</h2>
               <form onSubmit={handleImport} className="flex gap-2">
                 <input
                   type="text"
@@ -189,16 +200,36 @@ export default function AdminPage() {
                     <h3 className="text-xl font-bold text-gray-800 mb-2">{q.title}</h3>
                     <p className="text-gray-500">{q.questions.length} Soru</p>
                   </div>
-                  <button 
-                    onClick={() => startGameFromLibrary(q)}
-                    className="mt-4 bg-[#26890c] text-white font-bold py-2 rounded hover:bg-[#1f7309]"
-                  >
-                    Oyunu Başlat
-                  </button>
+                  <div className="flex gap-2 mt-4">
+                    <button 
+                      onClick={() => startGameFromLibrary(q)}
+                      className="flex-1 bg-[#26890c] text-white font-bold py-2 rounded hover:bg-[#1f7309]"
+                    >
+                      Oyunu Başlat
+                    </button>
+                    <button 
+                      onClick={() => setEditingQuiz(q)}
+                      className="bg-gray-200 text-gray-700 font-bold px-4 py-2 rounded hover:bg-gray-300"
+                    >
+                      Düzenle
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
+        )}
+
+        {activeTab === "library" && editingQuiz !== null && (
+          <KanhootBuilder 
+            initialData={editingQuiz === "new" ? undefined : editingQuiz} 
+            adminKey={password}
+            onSave={() => {
+              setEditingQuiz(null);
+              fetchLibrary();
+            }}
+            onCancel={() => setEditingQuiz(null)}
+          />
         )}
 
         {activeTab === "stats" && (
