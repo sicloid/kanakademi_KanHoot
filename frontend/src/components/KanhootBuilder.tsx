@@ -21,10 +21,12 @@ type KanhootQuiz = {
 
 export default function KanhootBuilder({ 
   initialData, 
+  adminKey,
   onSave, 
   onCancel 
 }: { 
   initialData?: KanhootQuiz; 
+  adminKey: string;
   onSave: () => void;
   onCancel: () => void;
 }) {
@@ -96,11 +98,13 @@ export default function KanhootBuilder({
       };
       if (initialData?.id) payload.id = initialData.id;
 
-      const res = await fetch("/api/kanhoots", {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://188.132.232.104:8080";
+
+      const res = await fetch(`${API_URL}/api/kanhoots`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
-          "X-Admin-Key": "K2026" // Assuming fixed admin password or should be passed as prop
+          "X-Admin-Key": adminKey
         },
         body: JSON.stringify(payload)
       });
@@ -175,7 +179,7 @@ export default function KanhootBuilder({
             type="text" 
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="text-2xl font-black text-[#0B1B3D] border-b-2 border-transparent focus:border-[#fd3e04] outline-none bg-transparent w-1/2 placeholder-gray-400 transition-colors"
+            className="text-2xl font-black text-black border-b-2 border-transparent focus:border-[#fd3e04] outline-none bg-white w-1/2 placeholder-gray-400 transition-colors px-2 py-1"
             placeholder="Kanhoot Başlığı"
           />
           <div className="flex gap-3">
@@ -207,7 +211,7 @@ export default function KanhootBuilder({
                   value={activeQ.question}
                   onChange={(e) => handleQuestionChange(e.target.value)}
                   placeholder="Sorunuzu buraya yazın"
-                  className="w-full text-3xl md:text-4xl font-black text-center text-[#333] outline-none placeholder-gray-300"
+                  className="w-full text-3xl md:text-4xl font-black text-center text-black bg-white outline-none placeholder-gray-300"
                 />
               </div>
 

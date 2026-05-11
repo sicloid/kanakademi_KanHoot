@@ -23,14 +23,6 @@ const itemVariants: any = {
   },
 };
 
-const leaderboardItemVariants: any = {
-  hidden: { x: -100, opacity: 0 },
-  visible: { 
-    x: 0, opacity: 1, 
-    transition: { type: "spring", stiffness: 300, damping: 24 } 
-  },
-};
-
 const viewVariants: any = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { duration: 0.3 } },
@@ -110,6 +102,7 @@ export default function HostPage() {
           const questions = JSON.parse(pendingQuiz);
           client.send("set_questions", { questions });
           setImportStatus("Kütüphaneden yüklendi! Başlamaya hazır.");
+          localStorage.removeItem("pendingQuiz");
         } catch(e) {}
       }
     });
@@ -135,7 +128,31 @@ export default function HostPage() {
       setCurrentQ(data.current);
       setTotalQ(data.total);
       setCorrectIndex(null);
-      setStatus("question");
+      
+      if (data.current === 1) {
+        // Show get ready screen for 3 seconds before showing FIRST question
+        setStatus("get_ready");
+        let counter = 3;
+        setReadyCountdown(counter);
+        
+        const timer = setInterval(() => {
+          counter--;
+          setReadyCountdown(counter);
+          if (counter === 0) {
+            clearInterval(timer);
+            setStatus("question");
+            setTimeLeft(data.timeLimit);
+          }
+        }, 1000);
+      } else {
+        // For subsequent questions, start immediately with a brief 1-second transition
+        setStatus("get_ready");
+        setReadyCountdown("Hazır...");
+        setTimeout(() => {
+          setStatus("question");
+          setTimeLeft(data.timeLimit);
+        }, 1000);
+      }
     });
 
     client.on("question_ended", (data) => {
@@ -228,7 +245,7 @@ export default function HostPage() {
             exit="exit"
             className="flex-1 flex flex-col items-center p-0 relative"
             style={{
-              background: "linear-gradient(135deg, #fd3e04 0%, #0B1B3D 100%)",
+              background: "linear-gradient(135deg, #fd3e04 0%, #d23100 100%)",
             }}
           >
             {/* Top Bar matching Kanhoot */}
@@ -239,7 +256,25 @@ export default function HostPage() {
                 <span className="text-3xl font-black text-[#fd3e04]">{joinUrl}</span>
                 <span className="text-2xl font-bold text-[#333]">adresine git</span>
               </div>
-              <div></div>
+              <div className="flex items-center gap-4">
+                <div className="bg-gray-100 rounded p-2 flex items-center">
+                  <input 
+                    type="text" 
+                    placeholder="Kanhoot linki yapıştır (Opsiyonel)" 
+                    value={kanhootLink}
+                    onChange={(e) => setKanhootLink(e.target.value)}
+                    className="bg-transparent border-none outline-none text-sm font-semibold w-64 text-gray-700"
+                  />
+                  <button 
+                    onClick={importKanhoot}
+                    disabled={!kanhootLink}
+                    className="bg-[#26890c] text-white px-3 py-1 rounded font-bold text-sm hover:bg-[#1e6b0a] disabled:opacity-50 transition-colors"
+                  >
+                    İçe Aktar
+                  </button>
+                </div>
+                {importStatus && <span className="text-xs text-[#26890c] font-bold">{importStatus}</span>}
+              </div>
             </div>
 
             {/* Center Area: PIN and QR */}
@@ -378,7 +413,7 @@ export default function HostPage() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex flex-col items-center justify-center bg-[#0B1B3D]"
+            className="flex-1 flex flex-col items-center justify-center bg-[#fd3e04]"
           >
             <h2 className="text-4xl md:text-6xl font-black text-white mb-12 tracking-tight">Hazır Ol!</h2>
             <motion.div 
@@ -511,7 +546,7 @@ export default function HostPage() {
               {leaderboard.slice(0, 5).map((player, index) => (
                 <motion.div 
                   key={player.id} 
-                  variants={leaderboardItemVariants}
+                  variants={itemVariants}
                   className="bg-white p-5 rounded shadow-sm border border-gray-200 flex justify-between items-center"
                 >
                   <div className="flex items-center gap-6">
@@ -534,7 +569,7 @@ export default function HostPage() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex flex-col items-center justify-end w-full relative bg-[#0B1B3D] overflow-hidden"
+            className="flex-1 flex flex-col items-center justify-end w-full relative bg-[#fd3e04] overflow-hidden"
           >
             <h2 className="text-5xl md:text-7xl font-black text-white mt-12 absolute top-12 tracking-tight drop-shadow-lg">Podyum</h2>
             

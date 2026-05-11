@@ -1,10 +1,8 @@
 Retrieving project…
 Deploying bicersukru15-2550s-projects/kanhooot
-Uploading [--------------------] (0.0B/69B)
-Uploading [====================] (69.0B/69B)
-Inspect: https://vercel.com/bicersukru15-2550s-projects/kanhooot/FeqVZL5G3t69BwMiUFGxq6Jrg8md [2s]
-Production: https://kanhooot-iyk011ybb-bicersukru15-2550s-projects.vercel.app [2s]
-https://kanhooot-iyk011ybb-bicersukru15-2550s-projects.vercel.appBuilding...
+Inspect: https://vercel.com/bicersukru15-2550s-projects/kanhooot/9m2XyTup1rUVpVHeqZ4UKSjvvYuq [2s]
+Production: https://kanhooot-frnox69vo-bicersukru15-2550s-projects.vercel.app [2s]
+https://kanhooot-frnox69vo-bicersukru15-2550s-projects.vercel.appBuilding...
 Building...
 Building: Running build in Washington, D.C., USA (East) – iad1
 Building: Build machine configuration: 2 cores, 8 GB
@@ -14,7 +12,7 @@ Building: Restored build cache from previous deployment (DdTpMhB5JeDVcZAV1RSJaJH
 Building: Running "vercel build"
 Building: Vercel CLI 53.3.2
 Building: Installing dependencies...
-Building: added 83 packages in 6s
+Building: added 101 packages in 6s
 Building: 158 packages are looking for funding
 Building: run `npm fund` for details
 Building: Detected Next.js version: 16.2.6
@@ -25,18 +23,18 @@ Building: Applying modifyConfig from Vercel
 Building: ▲ Next.js 16.2.6 (Turbopack)
 Building: - Environments: .env
 Building: Creating an optimized production build ...
-Building: ✓ Compiled successfully in 6.8s
+Building: ✓ Compiled successfully in 7.0s
 Building: Running TypeScript ...
 Building: Failed to type check.
-Building: ./src/app/api/kanhoots/route.ts:27:36
-Building: Type error: Parameter 'k' implicitly has an 'any' type.
-Building: 25 |
-Building: 26 |     // Format for frontend
-Building: > 27 |     const formatted = kanhoots.map(k => ({
-Building: |                                    ^
-Building: 28 |       id: k.id,
-Building: 29 |       title: k.title,
-Building: 30 |       questions: k.questions.map(q => ({
+Building: ./src/lib/prisma.ts:3:10
+Building: Type error: Module '"@prisma/client"' has no exported member 'PrismaClient'.
+Building: 1 | import { Pool } from "pg";
+Building: 2 | import { PrismaPg } from "@prisma/adapter-pg";
+Building: > 3 | import { PrismaClient } from "@prisma/client";
+Building: |          ^
+Building: 4 |
+Building: 5 | const globalForPrisma = global as unknown as { prisma: PrismaClient };
+Building: 6 |
 Building: Next.js build worker exited with code: 1 and signal: null
 Building: Error: Command "npm run build" exited with 1
 Error: Command "npm run build" exited with 1
