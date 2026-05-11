@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model game_sessions {
+  id                  String               @id
+  sessionToken        String               @unique
+  memeIds             String[]
+  startedAt           DateTime             @default(now())
+  expiresAt           DateTime
+  completed           Boolean              @default(false)
+  ipAddress           String?
+  leaderboard_entries leaderboard_entries?
+}
+
+model kanakademi_test_results {
+  id        String   @id
+  score     Int
+  profile   String
+  createdAt DateTime @default(now())
+  name      String   @default("Anonim")
+  bloodType String   @default("Bilinmiyor")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model leaderboard_archives {
+  id         String   @id
+  snapshot   String
+  entryCount Int
+  topPlayer  String?
+  topScore   Int      @default(0)
+  archivedAt DateTime @default(now())
+
+  @@index([archivedAt(sort: Desc)], map: "idx_archive_date")
+  @@index([archivedAt(sort: Desc)])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model leaderboard_entries {
+  id            String        @id
+  username      String
+  score         Int
+  correctCount  Int
+  totalTime     Int
+  sessionId     String        @unique
+  createdAt     DateTime      @default(now())
+  game_sessions game_sessions @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([score(sort: Desc)], map: "idx_leaderboard_score")
+  @@index([score(sort: Desc)])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model memes {
+  id              String   @id
+  youtubeUrl      String
+  startTime       Int      @default(0)
+  endTime         Int      @default(60)
+  correctOptionId String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime
+  imageUrl        String?
+  timesShown      Int      @default(0)
+  timesCorrect    Int      @default(0)
+  options         options  @relation(fields: [correctOptionId], references: [id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model options {
+  id        String   @id
+  text      String   @unique
+  createdAt DateTime @default(now())
+  memes     memes[]
+}
+
+model KanhootQuiz {
+  id        String   @id @default(uuid())
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  questions KanhootQuestion[]
+
+  @@map("kanhoot_quizzes")
+}
+
+model KanhootQuestion {
+  id             String      @id @default(uuid())
+  quizId         String
+  question       String
+  time_limit_sec Int
+  options        String[]    @default([])
+  correct_index  Int
+
+  quiz           KanhootQuiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@map("kanhoot_questions")
+}

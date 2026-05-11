@@ -237,6 +237,7 @@ func (g *Game) NextQuestion() {
 		Type: "question_started",
 		Data: map[string]interface{}{
 			"optionCount": len(q.Options),
+			"current":     g.CurrentQuestion + 1,
 		},
 	})
 }

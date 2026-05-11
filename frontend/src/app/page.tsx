@@ -110,7 +110,6 @@ export default function HostPage() {
           const questions = JSON.parse(pendingQuiz);
           client.send("set_questions", { questions });
           setImportStatus("Kütüphaneden yüklendi! Başlamaya hazır.");
-          localStorage.removeItem("pendingQuiz");
         } catch(e) {}
       }
     });
@@ -240,25 +239,7 @@ export default function HostPage() {
                 <span className="text-3xl font-black text-[#fd3e04]">{joinUrl}</span>
                 <span className="text-2xl font-bold text-[#333]">adresine git</span>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="bg-gray-100 rounded p-2 flex items-center">
-                  <input 
-                    type="text" 
-                    placeholder="Kanhoot linki yapıştır (Opsiyonel)" 
-                    value={kanhootLink}
-                    onChange={(e) => setKanhootLink(e.target.value)}
-                    className="bg-transparent border-none outline-none text-sm font-semibold w-64 text-black placeholder-gray-500"
-                  />
-                  <button 
-                    onClick={importKanhoot}
-                    disabled={!kanhootLink}
-                    className="bg-[#26890c] text-white px-3 py-1 rounded font-bold text-sm hover:bg-[#1e6b0a] disabled:opacity-50 transition-colors"
-                  >
-                    İçe Aktar
-                  </button>
-                </div>
-                {importStatus && <span className="text-xs text-[#26890c] font-bold">{importStatus}</span>}
-              </div>
+              <div></div>
             </div>
 
             {/* Center Area: PIN and QR */}
@@ -397,7 +378,7 @@ export default function HostPage() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex flex-col items-center justify-center bg-[#fd3e04]"
+            className="flex-1 flex flex-col items-center justify-center bg-[#0B1B3D]"
           >
             <h2 className="text-4xl md:text-6xl font-black text-white mb-12 tracking-tight">Hazır Ol!</h2>
             <motion.div 
@@ -553,7 +534,7 @@ export default function HostPage() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex flex-col items-center justify-end w-full relative bg-[#fd3e04] overflow-hidden"
+            className="flex-1 flex flex-col items-center justify-end w-full relative bg-[#0B1B3D] overflow-hidden"
           >
             <h2 className="text-5xl md:text-7xl font-black text-white mt-12 absolute top-12 tracking-tight drop-shadow-lg">Podyum</h2>
             

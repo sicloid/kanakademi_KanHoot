@@ -343,7 +343,7 @@ function PlayScreen() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex flex-col items-center justify-center bg-[#46178f] p-4"
+            className="flex-1 flex flex-col items-center justify-center bg-[#0B1B3D] p-4"
           >
             <div className="text-center text-white w-full max-w-sm">
               <motion.h2 
@@ -355,7 +355,7 @@ function PlayScreen() {
                 Oyun Bitti!
               </motion.h2>
               <p className="text-2xl mb-8 font-bold">Büyük ekrana bak</p>
-              <div className="bg-white text-[#46178f] p-6 rounded-md shadow-lg flex justify-between items-center">
+              <div className="bg-white text-[#0B1B3D] p-6 rounded-md shadow-lg flex justify-between items-center">
                 <p className="text-xl font-bold">Nihai Puanın</p>
                 <p className="text-4xl font-black">{score}</p>
               </div>
