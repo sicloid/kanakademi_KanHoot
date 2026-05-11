@@ -27,7 +27,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false);
   const [editingQuiz, setEditingQuiz] = useState<KanhootQuiz | null | "new">(null);
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://188.132.232.104:8080";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://vpn.sicloid.xyz:8443";
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();

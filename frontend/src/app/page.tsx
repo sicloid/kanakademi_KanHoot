@@ -97,7 +97,7 @@ export default function HostPage() {
   useEffect(() => {
     setJoinUrl(window.location.host + "/play");
     setQrUrl(window.location.origin + "/play");
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || "ws://188.132.232.104:8080";
+    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || "wss://vpn.sicloid.xyz:8443";
     const client = new WSClient(`${wsUrl}/ws/host`);
     wsRef.current = client;
 
@@ -110,7 +110,6 @@ export default function HostPage() {
           const questions = JSON.parse(pendingQuiz);
           client.send("set_questions", { questions });
           setImportStatus("Kütüphaneden yüklendi! Başlamaya hazır.");
-          // localStorage.removeItem("pendingQuiz"); // Removed so that on refresh it reloads the same quiz
         } catch(e) {}
       }
     });

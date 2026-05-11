@@ -11,3 +11,20 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Kanhoot {
+  id        String     @id @default(uuid())
+  title     String
+  createdAt DateTime   @default(now())
+  questions Question[]
+}
+
+model Question {
+  id             String  @id @default(uuid())
+  kanhootId      String
+  kanhoot        Kanhoot @relation(fields: [kanhootId], references: [id], onDelete: Cascade)
+  question       String
+  time_limit_sec Int     @default(20)
+  options        Json    // Array of strings
+  correct_index  Int     @default(0)
+}
