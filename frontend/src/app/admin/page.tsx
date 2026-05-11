@@ -20,7 +20,7 @@ type GameStat = {
 export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
+
   const [activeTab, setActiveTab] = useState<"library" | "stats" | "builder">("library");
   const [library, setLibrary] = useState<KanhootQuiz[]>([]);
   const [stats, setStats] = useState<GameStat[]>([]);
@@ -89,7 +89,7 @@ export default function AdminPage() {
 
       await fetch(`${API_URL}/api/kanhoots`, {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
           "X-Admin-Key": password
         },
@@ -124,7 +124,7 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#fd3e04] flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen flex flex-col items-center justify-center p-4" style={{ background: "linear-gradient(135deg, #0B1B3D 0%, #fd3e04 100%)" }}>
         <div className="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm w-full">
           <h1 className="text-3xl font-black mb-6 text-[#333]">Admin Girişi</h1>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -158,20 +158,20 @@ export default function AdminPage() {
         </div>
 
         <div className="flex gap-4 mb-6 border-b-2 border-gray-300 pb-2">
-          <button 
-            onClick={() => setActiveTab("library")} 
+          <button
+            onClick={() => setActiveTab("library")}
             className={`text-2xl font-bold px-4 py-2 rounded ${activeTab === "library" ? 'bg-[#fd3e04] text-white' : 'text-gray-500 hover:bg-gray-200'}`}
           >
             Kütüphane
           </button>
-          <button 
-            onClick={openBuilderNew} 
+          <button
+            onClick={openBuilderNew}
             className={`text-2xl font-bold px-4 py-2 rounded ${activeTab === "builder" ? 'bg-[#fd3e04] text-white' : 'text-gray-500 hover:bg-gray-200'}`}
           >
             + Yeni Kanhoot Oluştur
           </button>
-          <button 
-            onClick={() => setActiveTab("stats")} 
+          <button
+            onClick={() => setActiveTab("stats")}
             className={`text-2xl font-bold px-4 py-2 rounded ${activeTab === "stats" ? 'bg-[#fd3e04] text-white' : 'text-gray-500 hover:bg-gray-200'}`}
           >
             Sonuçlar & İstatistikler
@@ -179,11 +179,11 @@ export default function AdminPage() {
         </div>
 
         {activeTab === "builder" && (
-          <KanhootBuilder 
-            initialData={editingQuiz} 
+          <KanhootBuilder
+            initialData={editingQuiz}
             adminKey={password}
-            onSave={() => { setActiveTab("library"); fetchLibrary(); }} 
-            onCancel={() => setActiveTab("library")} 
+            onSave={() => { setActiveTab("library"); fetchLibrary(); }}
+            onCancel={() => setActiveTab("library")}
           />
         )}
 
@@ -199,8 +199,8 @@ export default function AdminPage() {
                   onChange={(e) => setImportUrl(e.target.value)}
                   className="flex-1 p-3 border-2 border-gray-300 rounded focus:border-[#fd3e04] outline-none font-medium"
                 />
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={loading || !importUrl}
                   className="bg-[#fd3e04] text-white font-bold px-6 rounded disabled:opacity-50"
                 >
@@ -218,13 +218,13 @@ export default function AdminPage() {
                     <p className="text-gray-500">{q.questions.length} Soru</p>
                   </div>
                   <div className="mt-4 flex gap-2">
-                    <button 
+                    <button
                       onClick={() => startGameFromLibrary(q)}
                       className="flex-1 bg-[#26890c] text-white font-bold py-2 rounded hover:bg-[#1f7309] transition-colors"
                     >
                       Oyunu Başlat
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleEdit(q)}
                       className="flex-1 bg-gray-200 text-gray-700 font-bold py-2 rounded hover:bg-gray-300 transition-colors"
                     >

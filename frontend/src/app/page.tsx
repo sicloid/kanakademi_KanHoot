@@ -245,7 +245,7 @@ export default function HostPage() {
             exit="exit"
             className="flex-1 flex flex-col items-center p-0 relative"
             style={{
-              background: "linear-gradient(135deg, #fd3e04 0%, #d23100 100%)",
+              background: "linear-gradient(135deg, #fd3e04 0%, #0B1B3D 100%)",
             }}
           >
             {/* Top Bar matching Kanhoot */}
@@ -413,7 +413,7 @@ export default function HostPage() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex flex-col items-center justify-center bg-[#fd3e04]"
+            className="flex-1 flex flex-col items-center justify-center bg-[#0B1B3D]"
           >
             <h2 className="text-4xl md:text-6xl font-black text-white mb-12 tracking-tight">Hazır Ol!</h2>
             <motion.div 
@@ -569,9 +569,9 @@ export default function HostPage() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex flex-col items-center justify-end w-full relative bg-[#fd3e04] overflow-hidden"
+            className="flex-1 flex flex-col items-center justify-end w-full relative bg-[#0B1B3D] overflow-hidden"
           >
-            <h2 className="text-5xl md:text-7xl font-black text-white mt-12 absolute top-12 tracking-tight drop-shadow-lg">Podyum</h2>
+            <h2 className="text-5xl md:text-7xl font-black text-white mt-12 absolute top-12 tracking-tight drop-shadow-[0_4px_4px_rgba(253,62,4,0.5)]">Podyum</h2>
             
             <motion.div 
               variants={containerVariants}
