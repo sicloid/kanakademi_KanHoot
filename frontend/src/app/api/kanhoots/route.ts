@@ -24,10 +24,10 @@ export async function GET(req: Request) {
     });
 
     // Format for frontend
-    const formatted = kanhoots.map(k => ({
+    const formatted = kanhoots.map((k: any) => ({
       id: k.id,
       title: k.title,
-      questions: k.questions.map(q => ({
+      questions: k.questions.map((q: any) => ({
         question: q.question,
         time_limit_sec: q.time_limit_sec,
         options: q.options,
