@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, Suspense } from "react";
 import { WSClient } from "@/lib/websocket";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
+import { WS_URL } from "@/lib/backend";
 
 type Status = "join" | "waiting" | "get_ready" | "question" | "answered" | "result" | "podium";
 
@@ -87,7 +88,7 @@ function PlayScreen() {
       localStorage.setItem("kanhoot_player_id", playerId);
     }
 
-    const wsUrl = process.env.NODE_ENV === "production" ? "wss://vpn.sicloid.xyz:8443" : "ws://localhost:8080";
+    const wsUrl = WS_URL;
     const client = new WSClient(`${wsUrl}/ws/player?pin=${pin}&name=${encodeURIComponent(name)}&id=${playerId}`);
     wsRef.current = client;
 

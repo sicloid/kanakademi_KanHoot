@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
+import { BACKEND_URL } from "@/lib/backend";
 
 export async function GET(request: Request) {
   try {
-    const wsUrl = process.env.NODE_ENV === "production" ? "https://vpn.sicloid.xyz:8443" : "http://localhost:8080";
+    const wsUrl = BACKEND_URL;
     
     // We get the admin key from headers
     const adminKey = request.headers.get("X-Admin-Key") || "";

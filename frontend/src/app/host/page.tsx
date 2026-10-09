@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { WSClient } from "@/lib/websocket";
 import confetti from "canvas-confetti";
 import { motion, AnimatePresence } from "framer-motion";
+import { WS_URL } from "@/lib/backend";
 
 type Status = "lobby" | "get_ready" | "question" | "result" | "leaderboard" | "podium";
 
@@ -99,7 +100,7 @@ export default function HostPage() {
   useEffect(() => {
     setJoinUrl(window.location.host + "/play");
     setQrUrl(window.location.origin + "/play");
-    const wsUrl = process.env.NODE_ENV === "production" ? "wss://vpn.sicloid.xyz:8443" : "ws://localhost:8080";
+    const wsUrl = WS_URL;
     const client = new WSClient(`${wsUrl}/ws/host`);
     wsRef.current = client;
 

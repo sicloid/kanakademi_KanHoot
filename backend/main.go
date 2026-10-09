@@ -44,14 +44,13 @@ var upgrader = websocket.Upgrader{
 		if strings.HasPrefix(origin, "http://localhost:") {
 			return true
 		}
-		// Allow kanakademi-quiz and related vercel app domains
-		// To make it strict to the exact deployment domain, you can check strings.HasSuffix(origin, ".vercel.app")
-		// For MVP security, we allow any vercel app or localhost
-		// In prod, replace with exact domain e.g., origin == "https://hsd-quiz.vercel.app"
-		if len(origin) > 11 && origin[len(origin)-11:] == ".vercel.app" {
+		// Kan Akademi alan adları (ön yüz kanhoot.kanakademi.com.tr'ye taşınınca da bağlanabilsin)
+		switch origin {
+		case "https://kanakademi.com.tr", "https://www.kanakademi.com.tr", "https://kanhoot.kanakademi.com.tr":
 			return true
 		}
-		return false
+		// Vercel önizleme/yayın adresleri
+		return strings.HasSuffix(origin, ".vercel.app")
 	},
 }
 
