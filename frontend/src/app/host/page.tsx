@@ -5,6 +5,7 @@ import { WSClient } from "@/lib/websocket";
 import confetti from "canvas-confetti";
 import { motion, AnimatePresence } from "framer-motion";
 import { WS_URL } from "@/lib/backend";
+import SoruIstatistigi from "@/components/SoruIstatistigi";
 
 type Status = "lobby" | "get_ready" | "question" | "result" | "leaderboard" | "podium";
 
@@ -86,6 +87,9 @@ export default function HostPage() {
   const [currentQ, setCurrentQ] = useState(0);
   const [totalQ, setTotalQ] = useState(0);
   const [answersCount, setAnswersCount] = useState(0);
+  // soru sonu istatistiği (şık başına cevap sayısı)
+  const [answerCounts, setAnswerCounts] = useState<number[]>([]);
+  const [playerCount, setPlayerCount] = useState(0);
 
   // Countdown state
   const [readyCountdown, setReadyCountdown] = useState<number | string>(3);
@@ -160,6 +164,7 @@ export default function HostPage() {
       setTotalQ(data.total);
       setCorrectIndex(null);
       setAnswersCount(0);
+      setAnswerCounts([]);
       setStatus("question");
     });
 
@@ -169,6 +174,8 @@ export default function HostPage() {
 
     client.on("question_ended", (data) => {
       setCorrectIndex(data.correctIndex);
+      setAnswerCounts(data.answerCounts ?? []);
+      setPlayerCount(data.playerCount ?? 0);
       setLeaderboard(data.leaderboard.sort((a: any, b: any) => b.score - a.score));
       setStatus("result");
     });
@@ -487,6 +494,11 @@ export default function HostPage() {
 
             {/* Middle Area: Timer and Counters */}
             <div className="flex-1 flex justify-between items-center px-8 relative">
+              {status === "result" && answerCounts.length > 0 ? (
+                <div className="flex-1 py-6">
+                  <SoruIstatistigi counts={answerCounts} correctIndex={correctIndex} playerCount={playerCount} colors={colors} />
+                </div>
+              ) : (
               <motion.div 
                 key={timeLeft}
                 initial={{ scale: 1.2 }}
@@ -495,6 +507,7 @@ export default function HostPage() {
               >
                 {timeLeft}
               </motion.div>
+              )}
 
               {status === "question" && (
                 <div className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col items-end">

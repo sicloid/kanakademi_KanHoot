@@ -26,7 +26,9 @@ type Game struct {
 	AcceptingAnswers bool
 	QuestionStartTime time.Time
 	HasAnswered      map[string]bool
-	mu               sync.RWMutex
+	// soru sonu istatistiği: her şıkkı kaç oyuncu seçti (Kahoot'taki sütun grafiği)
+	AnswerCounts []int
+	mu           sync.RWMutex
 }
 
 func NewGame(pin string, host *Client) *Game {
@@ -155,6 +157,9 @@ func (g *Game) HandleAnswer(clientID string, color string) {
 	}
 
 	question := g.Questions[g.CurrentQuestion]
+	if colorIndex < len(g.AnswerCounts) {
+		g.AnswerCounts[colorIndex]++
+	}
 	elapsed := time.Since(g.QuestionStartTime).Seconds()
 	timeLimit := float64(question.TimeLimitSec)
 
@@ -218,8 +223,9 @@ func (g *Game) NextQuestion() {
 	g.AcceptingAnswers = true
 	g.QuestionStartTime = time.Now()
 	g.HasAnswered = make(map[string]bool)
-	
+
 	q := g.Questions[g.CurrentQuestion]
+	g.AnswerCounts = make([]int, len(q.Options))
 	g.mu.Unlock()
 
 	g.BroadcastToHost(Message{
@@ -255,6 +261,8 @@ func (g *Game) EndQuestion() {
 		return
 	}
 	correctIndex := g.Questions[qIndex].CorrectIndex
+	answerCounts := append([]int(nil), g.AnswerCounts...)
+	playerCount := len(g.Players)
 	g.mu.Unlock()
 
 	// Calculate ranks
@@ -276,6 +284,8 @@ func (g *Game) EndQuestion() {
 		Data: map[string]interface{}{
 			"correctIndex": correctIndex,
 			"leaderboard":  g.GetLeaderboard()["leaderboard"],
+			"answerCounts": answerCounts,
+			"playerCount":  playerCount,
 		},
 	})
 
