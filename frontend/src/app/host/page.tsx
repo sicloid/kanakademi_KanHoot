@@ -265,7 +265,7 @@ export default function HostPage() {
   const showLeaderboard = () => setStatus("leaderboard");
 
   return (
-    <div className={`min-h-screen flex flex-col font-sans overflow-hidden ${["waiting", "get_ready", "podium"].includes(status) ? 'bg-gradient-to-br from-[#0B1B3D] to-[#1a2e5a]' : 'bg-[#f2f2f2]'}`}>
+    <div className={`min-h-screen flex flex-col font-sans overflow-hidden ${["waiting", "get_ready", "podium"].includes(status) ? 'kk-sahne' : 'bg-[#f2f2f2]'}`}>
       <AnimatePresence mode="wait">
         
         {status === "lobby" && (
@@ -275,17 +275,14 @@ export default function HostPage() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex flex-col items-center p-0 relative"
-            style={{
-              background: "linear-gradient(135deg, #fd3e04 0%, #0B1B3D 100%)",
-            }}
+            className="flex-1 flex flex-col items-center p-0 relative kk-sahne"
           >
             {/* Top Bar matching Kanhoot */}
             <div className="w-full bg-white/95 backdrop-blur-sm shadow-sm py-4 px-8 flex justify-between items-center z-10 rounded-b-xl mb-8">
               <div className="flex items-center gap-4">
-                <img src="https://kanakademi.com.tr/wp-content/uploads/2024/08/kanakademi-logo.png" alt="Kan Akademi" className="h-10 object-contain mr-4" />
+                <img src="/kan-akademi-logo.png" alt="Kan Akademi" className="h-10 object-contain mr-4" />
                 <span className="text-2xl font-bold text-[#333]">Oyuna katılmak için</span>
-                <span className="text-3xl font-black text-[#fd3e04]">{joinUrl}</span>
+                <span className="text-3xl font-black text-[#e3262f]">{joinUrl}</span>
                 <span className="text-2xl font-bold text-[#333]">adresine git</span>
               </div>
               <div className="flex items-center gap-4">
@@ -320,7 +317,7 @@ export default function HostPage() {
                 className="bg-white rounded-lg shadow-2xl p-8 flex flex-col items-center justify-center min-w-[400px] border-b-8 border-gray-200"
               >
                 {quizTitle && (
-                  <h1 className="text-3xl font-black text-center text-[#fd3e04] mb-4 uppercase tracking-wider">{quizTitle}</h1>
+                  <h1 className="text-3xl font-black text-center text-[#e3262f] mb-4 uppercase tracking-wider">{quizTitle}</h1>
                 )}
                 <h2 className="text-2xl font-bold text-gray-500 mb-2">Oyun PIN'i</h2>
                 <div className="text-7xl md:text-8xl font-black tracking-tight text-[#333]">
@@ -338,7 +335,7 @@ export default function HostPage() {
                 >
                   <p className="text-lg font-bold text-gray-500 mb-4 uppercase tracking-wider">Hızlı Katılım</p>
                   <div 
-                    className="bg-white p-2 border-4 border-[#fd3e04] rounded-lg cursor-pointer hover:scale-105 transition-transform relative group"
+                    className="bg-white p-2 border-4 border-[#e3262f] rounded-lg cursor-pointer hover:scale-105 transition-transform relative group"
                     onClick={() => setQrModalOpen(true)}
                   >
                     {/* Hover Expand Icon */}
@@ -389,7 +386,7 @@ export default function HostPage() {
                   >
                     <div className="w-full flex justify-between items-center mb-6">
                       <div className="flex items-center gap-3">
-                        <img src="https://kanakademi.com.tr/wp-content/uploads/2024/08/kanakademi-logo.png" alt="Kan Akademi" className="h-8 object-contain" />
+                        <img src="/kan-akademi-logo.png" alt="Kan Akademi" className="h-8 object-contain" />
                         <h2 className="text-2xl font-bold text-gray-800">Oyuna Katıl</h2>
                       </div>
                       <button 
@@ -402,7 +399,7 @@ export default function HostPage() {
                     <img src={`https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${qrUrl}?pin=${pin}`} alt="QR Code" className="w-64 h-64 md:w-96 md:h-96" />
                     <div className="mt-8 text-center bg-gray-100 w-full py-4 rounded-xl">
                       <p className="text-gray-500 font-bold mb-1">Oyun PIN'i</p>
-                      <p className="text-5xl font-black text-[#fd3e04] tracking-widest">{pin}</p>
+                      <p className="text-5xl font-black text-[#e3262f] tracking-widest">{pin}</p>
                     </div>
                   </motion.div>
                 </motion.div>
@@ -448,7 +445,7 @@ export default function HostPage() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="flex-1 flex flex-col items-center justify-center bg-[#0B1B3D] absolute inset-0 z-50"
+            className="flex-1 flex flex-col items-center justify-center bg-[#0e0a2e] absolute inset-0 z-50"
           >
             {currentQ === 0 ? (
               <>
@@ -468,7 +465,7 @@ export default function HostPage() {
               <>
                 <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tight drop-shadow-md">Soru Geliyor...</h2>
                 <div className="flex justify-center">
-                  <img src="https://kanakademi.com.tr/wp-content/uploads/2024/10/Adsiz-tasarim-1.gif" alt="Soru Geliyor..." className="w-48 h-48 md:w-64 md:h-64 object-contain" />
+                  <img src="/bekleniyor.gif" alt="Soru Geliyor..." className="w-48 h-48 md:w-64 md:h-64 object-contain" />
                 </div>
               </>
             )}
@@ -524,7 +521,7 @@ export default function HostPage() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={showLeaderboard} 
-                  className="absolute right-8 top-8 bg-[#fd3e04] hover:bg-[#d23100] text-white text-xl font-black py-4 px-10 rounded shadow-md border-b-4 border-[#d23100] active:translate-y-1 active:border-b-0 z-20"
+                  className="absolute right-8 top-8 bg-[#e3262f] hover:bg-[#b3121c] text-white text-xl font-black py-4 px-10 rounded shadow-md border-b-4 border-[#b3121c] active:translate-y-1 active:border-b-0 z-20"
                 >
                   Sonraki
                 </motion.button>
@@ -591,7 +588,7 @@ export default function HostPage() {
               <h2 className="text-4xl md:text-5xl font-black text-[#333] tracking-tight">Skor Tablosu</h2>
               <button 
                 onClick={nextQuestion}
-                className="bg-[#fd3e04] hover:bg-[#d23100] text-white text-xl font-black py-4 px-10 rounded shadow-md border-b-4 border-[#d23100] active:translate-y-1 active:border-b-0"
+                className="bg-[#e3262f] hover:bg-[#b3121c] text-white text-xl font-black py-4 px-10 rounded shadow-md border-b-4 border-[#b3121c] active:translate-y-1 active:border-b-0"
               >
                 Sonraki
               </button>

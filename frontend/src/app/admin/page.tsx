@@ -119,7 +119,7 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0B1B3D] to-[#fd3e04] flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen kk-sahne flex flex-col items-center justify-center p-4">
         <div className="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm w-full">
           <h1 className="text-3xl font-black mb-6 text-[#333]">Admin Girişi</h1>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -128,11 +128,11 @@ export default function AdminPage() {
               placeholder="Şifre"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full text-center text-black placeholder-gray-500 bg-white text-xl font-bold p-3 border-2 border-gray-300 rounded focus:border-[#fd3e04] focus:outline-none"
+              className="w-full text-center text-black placeholder-gray-500 bg-white text-xl font-bold p-3 border-2 border-gray-300 rounded focus:border-[#e3262f] focus:outline-none"
             />
             <button
               type="submit"
-              className="w-full bg-[#fd3e04] text-white text-xl font-bold py-3 rounded hover:bg-[#d23100] transition-colors"
+              className="w-full bg-[#e3262f] text-white text-xl font-bold py-3 rounded hover:bg-[#b3121c] transition-colors"
             >
               Giriş Yap
             </button>
@@ -145,9 +145,9 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-gray-100 p-6 font-sans">
       <div className="max-w-5xl mx-auto">
-        <div className="flex items-center justify-between mb-8 bg-[#0B1B3D] p-6 rounded-lg shadow-lg">
+        <div className="flex items-center justify-between mb-8 bg-[#0e0a2e] p-6 rounded-lg shadow-lg">
           <div className="flex items-center gap-4">
-            <img src="https://kanakademi.com.tr/wp-content/uploads/2024/08/kanakademi-logo.png" alt="Kan Akademi" className="h-12 object-contain bg-white rounded p-1" />
+            <img src="/kan-akademi-logo.png" alt="Kan Akademi" className="h-12 object-contain bg-white rounded p-1" />
             <h1 className="text-3xl font-black text-white">Admin Paneli</h1>
           </div>
           <button onClick={() => setIsAuthenticated(false)} className="text-white/80 font-bold hover:text-white bg-white/10 px-4 py-2 rounded transition-colors">
@@ -158,13 +158,13 @@ export default function AdminPage() {
         <div className="flex gap-4 mb-6 border-b-2 border-gray-300 pb-2">
           <button 
             onClick={() => setActiveTab("library")} 
-            className={`text-2xl font-bold px-4 py-2 rounded transition-colors ${activeTab === "library" ? 'bg-[#0B1B3D] text-white shadow-md' : 'text-gray-500 hover:bg-gray-200'}`}
+            className={`text-2xl font-bold px-4 py-2 rounded transition-colors ${activeTab === "library" ? 'bg-[#0e0a2e] text-white shadow-md' : 'text-gray-500 hover:bg-gray-200'}`}
           >
             Kütüphane
           </button>
           <button 
             onClick={() => setActiveTab("stats")} 
-            className={`text-2xl font-bold px-4 py-2 rounded transition-colors ${activeTab === "stats" ? 'bg-[#0B1B3D] text-white shadow-md' : 'text-gray-500 hover:bg-gray-200'}`}
+            className={`text-2xl font-bold px-4 py-2 rounded transition-colors ${activeTab === "stats" ? 'bg-[#0e0a2e] text-white shadow-md' : 'text-gray-500 hover:bg-gray-200'}`}
           >
             Sonuçlar & İstatistikler
           </button>
@@ -176,7 +176,7 @@ export default function AdminPage() {
               <h2 className="text-2xl font-bold text-gray-800">Kütüphane</h2>
               <button 
                 onClick={() => setEditingQuiz("new")}
-                className="bg-[#0B1B3D] text-white font-bold px-6 py-2 rounded hover:bg-[#1a2e5a] transition-colors"
+                className="bg-[#0e0a2e] text-white font-bold px-6 py-2 rounded hover:bg-[#1b1546] transition-colors"
               >
                 + Yeni Oluştur
               </button>
@@ -189,12 +189,12 @@ export default function AdminPage() {
                   placeholder="https://create.kahoot.it/share/... linkini yapıştır"
                   value={importUrl}
                   onChange={(e) => setImportUrl(e.target.value)}
-                  className="flex-1 p-3 border-2 border-gray-300 rounded focus:border-[#fd3e04] outline-none font-medium text-gray-900"
+                  className="flex-1 p-3 border-2 border-gray-300 rounded focus:border-[#e3262f] outline-none font-medium text-gray-900"
                 />
                 <button 
                   type="submit" 
                   disabled={loading || !importUrl}
-                  className="bg-[#fd3e04] text-white font-bold px-6 rounded disabled:opacity-50"
+                  className="bg-[#e3262f] text-white font-bold px-6 rounded disabled:opacity-50"
                 >
                   {loading ? "Aktarılıyor..." : "İçe Aktar"}
                 </button>
@@ -264,7 +264,7 @@ export default function AdminPage() {
                         <tr key={idx} className="border-b border-gray-100">
                           <td className="py-2 font-bold text-gray-500">#{idx + 1}</td>
                           <td className="py-2 font-medium">{lb.name}</td>
-                          <td className="py-2 text-right font-bold text-[#fd3e04]">{lb.score}</td>
+                          <td className="py-2 text-right font-bold text-[#e3262f]">{lb.score}</td>
                         </tr>
                       ))}
                     </tbody>

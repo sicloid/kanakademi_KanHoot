@@ -1,26 +1,66 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* koyu tema: <html data-tema="koyu"> (layout.tsx'teki betik), kanakademi.com.tr ile ortak */
+@custom-variant dark (&:where([data-tema=koyu], [data-tema=koyu] *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-jakarta), system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #fff;
+  color: #171717;
+}
+[data-tema="koyu"] body {
+  background: #0e0a2e;
+  color: #eceaf6;
+}
+
+@layer components {
+  /* kanakademi.com.tr'deki vurgulu bölümler: açık temada markanın açık tonları, koyu temada mor-lacivert */
+  .kk-zemin {
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(135deg, #fdebee 0%, #f2eefc 50%, #def1fc 100%);
+  }
+  [data-tema="koyu"] .kk-zemin,
+  /* oyun ekranları (katılma, lobi, podyum): projeksiyonda okunsun diye her zaman koyu */
+  .kk-sahne {
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(135deg, #24123f 0%, #1b1447 50%, #0f1f4a 100%);
+  }
+
+  /* damar çizgileri: sitedeki kontur deseni (public/kontur.svg), renk dikey akar, yazının olduğu solda silik */
+  .kk-zemin::before,
+  .kk-sahne::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.3;
+    background: linear-gradient(180deg, #e3262f, #9b3bb5, #1ba6df, #9b3bb5, #e3262f) 0 0 / 100% 560px;
+    -webkit-mask: url("/kontur.svg") center / cover no-repeat, linear-gradient(100deg, transparent 20%, #000 70%);
+    -webkit-mask-composite: source-in;
+    mask: url("/kontur.svg") center / cover no-repeat, linear-gradient(100deg, transparent 20%, #000 70%);
+    mask-composite: intersect;
+    animation: kontur-akis 14s linear infinite;
+  }
+  .kk-sahne::before,
+  [data-tema="koyu"] .kk-zemin::before {
+    opacity: 0.45;
+  }
+}
+
+@keyframes kontur-akis {
+  to {
+    background-position: 0 560px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kk-zemin::before,
+  .kk-sahne::before {
+    animation: none;
+  }
 }

@@ -132,7 +132,7 @@ export default function KanhootBuilder({
       {/* LEFT SIDEBAR: Questions List */}
       <div className="w-64 bg-white border-r-2 border-gray-200 flex flex-col">
         <div className="p-4 border-b border-gray-200">
-          <h3 className="font-black text-[#0B1B3D] text-lg">Sorular</h3>
+          <h3 className="font-black text-[#0e0a2e] text-lg">Sorular</h3>
         </div>
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           <AnimatePresence>
@@ -145,7 +145,7 @@ export default function KanhootBuilder({
                 key={idx} 
                 onClick={() => setActiveIndex(idx)}
                 className={`relative p-3 rounded-lg border-2 cursor-pointer group transition-all
-                  ${activeIndex === idx ? 'border-[#0B1B3D] bg-blue-50 shadow-md' : 'border-gray-200 hover:border-gray-300 bg-white'}`}
+                  ${activeIndex === idx ? 'border-[#0e0a2e] bg-blue-50 shadow-md' : 'border-gray-200 hover:border-gray-300 bg-white'}`}
               >
                 <p className="font-bold text-gray-500 text-xs mb-1">{idx + 1}. Soru</p>
                 <p className="font-semibold text-gray-800 text-sm truncate">{q.question || "Boş Soru"}</p>
@@ -164,7 +164,7 @@ export default function KanhootBuilder({
           </AnimatePresence>
           <button 
             onClick={addQuestion}
-            className="w-full py-3 mt-4 border-2 border-dashed border-[#0B1B3D] text-[#0B1B3D] font-bold rounded-lg hover:bg-[#0B1B3D] hover:text-white transition-colors"
+            className="w-full py-3 mt-4 border-2 border-dashed border-[#0e0a2e] text-[#0e0a2e] font-bold rounded-lg hover:bg-[#0e0a2e] hover:text-white transition-colors"
           >
             + Soru Ekle
           </button>
@@ -179,7 +179,7 @@ export default function KanhootBuilder({
             type="text" 
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="text-2xl font-black text-black border-b-2 border-transparent focus:border-[#fd3e04] outline-none bg-white w-1/2 placeholder-gray-500 transition-colors px-2 py-1"
+            className="text-2xl font-black text-black border-b-2 border-transparent focus:border-[#e3262f] outline-none bg-white w-1/2 placeholder-gray-500 transition-colors px-2 py-1"
             placeholder="Kanhoot Başlığı"
           />
           <div className="flex gap-3">
@@ -192,7 +192,7 @@ export default function KanhootBuilder({
             <button 
               onClick={saveKanhoot}
               disabled={saving}
-              className="px-8 py-2 rounded font-bold text-white bg-[#fd3e04] hover:bg-[#d23100] transition-colors disabled:opacity-50"
+              className="px-8 py-2 rounded font-bold text-white bg-[#e3262f] hover:bg-[#b3121c] transition-colors disabled:opacity-50"
             >
               {saving ? "Kaydediliyor..." : "Kaydet"}
             </button>
@@ -221,7 +221,7 @@ export default function KanhootBuilder({
                   <select 
                     value={activeQ.time_limit_sec}
                     onChange={(e) => handleTimeChange(Number(e.target.value))}
-                    className="font-bold text-[#0B1B3D] bg-transparent outline-none cursor-pointer text-lg"
+                    className="font-bold text-[#0e0a2e] bg-transparent outline-none cursor-pointer text-lg"
                   >
                     <option value={5}>5 Saniye</option>
                     <option value={10}>10 Saniye</option>
