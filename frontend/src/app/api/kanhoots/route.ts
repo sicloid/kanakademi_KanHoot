@@ -1,108 +1,23 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { BACKEND_URL } from '@/lib/backend';
 
-export async function GET(request: Request) {
+// Soru setleri VPS'teki Go backend'de (library.json); bu rota yalnızca aracı.
+// Yönetici anahtarı burada saklanmaz: yönetim panelinden gelen X-Admin-Key aynen iletilir, doğrulamayı backend yapar.
+// GET ?id=… anahtarsız çalışır (oyun kurmak için); liste ve kaydetme anahtar ister.
+async function ilet(request: Request, method: 'GET' | 'POST') {
+  const { search } = new URL(request.url);
   try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
-
-    if (id) {
-      const kanhoot = await prisma.kanhoot_quizzes.findUnique({
-        where: { id },
-        include: { questions: true }
-      });
-      return NextResponse.json(kanhoot);
-    }
-
-    const kanhoots = await prisma.kanhoot_quizzes.findMany({
-      include: {
-        questions: true
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
+    const res = await fetch(`${BACKEND_URL}/api/kanhoots${search}`, {
+      method,
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Key': request.headers.get('X-Admin-Key') ?? '' },
+      body: method === 'POST' ? await request.text() : undefined,
+      cache: 'no-store',
     });
-    
-    return NextResponse.json(kanhoots);
-  } catch (error: any) {
-    console.error("Error fetching kanhoots:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return new NextResponse(await res.text(), { status: res.status, headers: { 'Content-Type': 'application/json' } });
+  } catch {
+    return NextResponse.json({ error: 'Kanhoot sunucusuna ulaşılamıyor' }, { status: 502 });
   }
 }
 
-export async function POST(request: Request) {
-  try {
-    const data = await request.json();
-    
-    if (!data.title || !data.questions) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
-    }
-
-    if (data.id) {
-      const existing = await prisma.kanhoot_quizzes.findUnique({ where: { id: data.id } });
-      
-      if (existing) {
-        // Update existing
-        // First delete old questions
-        await prisma.kanhoot_questions.deleteMany({
-          where: { quizId: data.id }
-        });
-        
-        const updated = await prisma.kanhoot_quizzes.update({
-          where: { id: data.id },
-          data: {
-            title: data.title,
-            questions: {
-              create: data.questions.map((q: any) => ({
-                question: q.question,
-                time_limit_sec: Number(q.time_limit_sec),
-                options: q.options,
-                correct_index: Number(q.correct_index)
-              }))
-            }
-          },
-          include: { questions: true }
-        });
-        return NextResponse.json(updated);
-      } else {
-        // Create new with the specific ID
-        const created = await prisma.kanhoot_quizzes.create({
-          data: {
-            id: data.id,
-            title: data.title,
-            questions: {
-              create: data.questions.map((q: any) => ({
-                question: q.question,
-                time_limit_sec: Number(q.time_limit_sec),
-                options: q.options,
-                correct_index: Number(q.correct_index)
-              }))
-            }
-          },
-          include: { questions: true }
-        });
-        return NextResponse.json(created);
-      }
-    } else {
-      // Create new without ID (Prisma generates UUID)
-      const created = await prisma.kanhoot_quizzes.create({
-        data: {
-          title: data.title,
-          questions: {
-            create: data.questions.map((q: any) => ({
-              question: q.question,
-              time_limit_sec: Number(q.time_limit_sec),
-              options: q.options,
-              correct_index: Number(q.correct_index)
-            }))
-          }
-        },
-        include: { questions: true }
-      });
-      return NextResponse.json(created);
-    }
-  } catch (error: any) {
-    console.error("Error saving kanhoot:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-}
+export const GET = (request: Request) => ilet(request, 'GET');
+export const POST = (request: Request) => ilet(request, 'POST');

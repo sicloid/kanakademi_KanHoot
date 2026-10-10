@@ -1,7 +1,9 @@
 package main
 
 import (
+	"crypto/subtle"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -153,39 +155,71 @@ func main() {
 		}
 	}
 
+	// Yönetici anahtarı kodda değil, sunucudaki /etc/kahoot-backend.env dosyasında (KANHOOT_ADMIN_KEY).
+	// Tanımlı değilse yönetim uçları tamamen kapalıdır.
+	adminKey := os.Getenv("KANHOOT_ADMIN_KEY")
+	if adminKey == "" {
+		log.Println("UYARI: KANHOOT_ADMIN_KEY tanımlı değil, yönetim uçları kapalı")
+	}
+	yonetici := func(r *http.Request) bool {
+		return adminKey != "" && subtle.ConstantTimeCompare([]byte(r.Header.Get("X-Admin-Key")), []byte(adminKey)) == 1
+	}
+
+	// GET ?id=… herkese açık (oyun kurmak için gerekir); liste ve kaydetme yalnızca yönetici
 	http.HandleFunc("/api/kanhoots", cors(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != "OPTIONS" && r.Header.Get("X-Admin-Key") != "Kanakademi2026" {
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		w.Header().Set("Content-Type", "application/json")
+		if id := r.URL.Query().Get("id"); r.Method == "GET" && id != "" {
+			q, ok := GetQuiz(id)
+			if !ok {
+				http.Error(w, `{"error":"bulunamadı"}`, http.StatusNotFound)
+				return
+			}
+			json.NewEncoder(w).Encode(q)
 			return
 		}
-
-		w.Header().Set("Content-Type", "application/json")
-		if r.Method == "GET" {
+		if !yonetici(r) {
+			http.Error(w, `{"error":"yetkisiz"}`, http.StatusUnauthorized)
+			return
+		}
+		switch r.Method {
+		case "GET":
 			json.NewEncoder(w).Encode(GetLibrary())
-		} else if r.Method == "POST" {
+		case "POST":
+			r.Body = http.MaxBytesReader(w, r.Body, 1<<20)
 			var quiz KanhootQuiz
-			if err := json.NewDecoder(r.Body).Decode(&quiz); err == nil {
-				AddQuizToLibrary(quiz)
-				w.WriteHeader(http.StatusOK)
-			} else {
-				http.Error(w, err.Error(), http.StatusBadRequest)
+			if err := json.NewDecoder(r.Body).Decode(&quiz); err != nil {
+				http.Error(w, `{"error":"geçersiz istek"}`, http.StatusBadRequest)
+				return
 			}
+			if hata := quizDogrula(quiz); hata != "" {
+				http.Error(w, `{"error":"`+hata+`"}`, http.StatusBadRequest)
+				return
+			}
+			kayit, err := UpsertQuiz(quiz)
+			if err != nil {
+				log.Println("library.json yazılamadı:", err)
+				http.Error(w, `{"error":"kaydedilemedi"}`, http.StatusInternalServerError)
+				return
+			}
+			json.NewEncoder(w).Encode(kayit)
+		default:
+			http.Error(w, `{"error":"desteklenmiyor"}`, http.StatusMethodNotAllowed)
 		}
 	}))
 
 	http.HandleFunc("/api/stats", cors(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != "OPTIONS" && r.Header.Get("X-Admin-Key") != "Kanakademi2026" {
+		if !yonetici(r) {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
-
 		w.Header().Set("Content-Type", "application/json")
-		if r.Method == "GET" {
-			json.NewEncoder(w).Encode(GetStats())
-		}
+		json.NewEncoder(w).Encode(GetStats())
 	}))
 
 	serverAddr := ":8080"
+	if p := os.Getenv("PORT"); p != "" {
+		serverAddr = ":" + p // yerel denemelerde başka port
+	}
 	log.Printf("Starting server on %s", serverAddr)
 
 	srv := &http.Server{
@@ -197,4 +231,21 @@ func main() {
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
+}
+
+// Bozuk bir set oyunu ortasında kilitlemesin: başlık, 1–200 soru, 2–4 seçenek, geçerli doğru cevap ve süre
+func quizDogrula(q KanhootQuiz) string {
+	if strings.TrimSpace(q.Title) == "" {
+		return "başlık boş"
+	}
+	if len(q.Questions) == 0 || len(q.Questions) > 200 {
+		return "soru sayısı 1 ile 200 arasında olmalı"
+	}
+	for i, s := range q.Questions {
+		if strings.TrimSpace(s.Question) == "" || len(s.Options) < 2 || len(s.Options) > 4 ||
+			s.CorrectIndex < 0 || s.CorrectIndex >= len(s.Options) || s.TimeLimitSec < 5 || s.TimeLimitSec > 300 {
+			return fmt.Sprintf("%d. soru eksik ya da hatalı", i+1)
+		}
+	}
+	return ""
 }

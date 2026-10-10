@@ -29,14 +29,16 @@ export default function AdminPage() {
 
   const API_URL = ""; // use relative route to Next.js API
 
-  const handleLogin = (e: React.FormEvent) => {
+  // Şifre tarayıcıda değil, Kanhoot sunucusunda doğrulanır (yanlışsa liste 401 döner)
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === "Kanakademi2026") {
+    const res = await fetch(`${API_URL}/api/kanhoots`, { headers: { "X-Admin-Key": password } }).catch(() => null);
+    if (res?.ok) {
       setIsAuthenticated(true);
-      fetchLibrary();
+      setLibrary((await res.json()) || []);
       fetchStats();
     } else {
-      alert("Yanlış şifre!");
+      alert(res?.status === 401 ? "Yanlış şifre!" : "Kanhoot sunucusuna ulaşılamıyor.");
     }
   };
 

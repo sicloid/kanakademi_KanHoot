@@ -112,9 +112,7 @@ export default function HostPage() {
       
       if (quizId) {
         try {
-          const res = await fetch(`/api/kanhoots?id=${quizId}`, {
-            headers: { 'X-Admin-Key': 'Kanakademi2026' }
-          });
+          const res = await fetch(`/api/kanhoots?id=${quizId}`);
           if (res.ok) {
             const kanhoot = await res.json();
             setQuizTitle(kanhoot.title);

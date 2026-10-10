@@ -109,11 +109,11 @@ export default function KanhootBuilder({
         body: JSON.stringify(payload)
       });
       
-      if (!res.ok) throw new Error("Kayıt başarısız");
+      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? "Kayıt başarısız");
       alert("Kanhoot başarıyla kaydedildi!");
       onSave();
     } catch (e) {
-      alert("Hata oluştu.");
+      alert(`Kaydedilemedi: ${(e as Error).message}`);
     } finally {
       setSaving(false);
     }
